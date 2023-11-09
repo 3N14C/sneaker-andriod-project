@@ -1,5 +1,8 @@
 {
 	"version": 2,
+	"env": {
+		"DATABASE_URL": "postgresql://postgres:postgres@localhost:5432/sneakers?schema=public"
+	},
 	"builds": [
 		{
 			"src": "src/main.ts",
