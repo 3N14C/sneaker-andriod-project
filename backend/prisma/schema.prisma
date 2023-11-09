@@ -1,0 +1,103 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id String @id @default(uuid())
+
+  username String @unique
+  email    String @unique
+  password String
+
+  avatar String?
+
+  role Role @default(USER)
+
+  auth Boolean @default(false)
+
+  orders Order[]
+}
+
+enum Role {
+  ADMIN
+  USER
+}
+
+model Brand {
+  id String @id @default(uuid())
+
+  name    String    @unique
+  logo    String?
+  sneaker Sneaker[]
+}
+
+model Offer {
+  id String @id @default(uuid())
+
+  discount    String @unique
+  description String
+  day         String @unique
+
+  sneaker Sneaker[]
+}
+
+model Sneaker {
+  id String @id @default(uuid())
+
+  name       String
+  brandName  String?
+  price      String
+  offer      Offer?  @relation(fields: [offerPrice], references: [discount])
+  offerPrice String?
+  rating     String  @default("1.0")
+  soldCount  String  @default("0")
+  image      String?
+
+  brand       Brand?        @relation(fields: [brandName], references: [name])
+  size        Size[]
+  sneakerSize SneakerSize[]
+  
+  orders      Order[]
+}
+
+model SneakerSize {
+  sneaker   Sneaker @relation(fields: [sneakerId], references: [id])
+  size      Size    @relation(fields: [sizeId], references: [id])
+  sizeId    String
+  sneakerId String
+
+  @@id([sneakerId, sizeId])
+}
+
+model Size {
+  id String @id @default(uuid())
+
+  name String @unique
+
+  sneaker     Sneaker[]
+  sneakerSize SneakerSize[]
+}
+
+model Order {
+  id String @id @default(uuid())
+
+  user      User    @relation(fields: [userId], references: [id])
+  userId    String
+  sneaker   Sneaker @relation(fields: [sneakerId], references: [id])
+  sneakerId String
+  statusDelivery String @default("box")
+  statusDeliveryDescription String @default("В процессе сборки")
+
+  roadmapDelivery String[] @default(["Оплачено"])
+  address String?
+  barcode String?
+  orderDate DateTime @default(now())
+}
