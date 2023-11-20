@@ -17,11 +17,11 @@ export default function Profile({ route, navigation }) {
   const [avatar, setAvatar] = React.useState(null);
 
   const { data } = route?.params;
-  const [editUserById] = goodsApi.useUpdateUserByIdMutation();
+  const [editUserById] = goodsApi.useUpdateUserByIdMutation( data.id );
 
   React.useEffect(() => {
-    setAvatar(data?.avatar);
-  }, [data?.avatar]);
+    setAvatar(data.avatar);
+  }, [ data ]);
 
   const handleLogout = () => {
     AsyncStorage.removeItem("user", (err) => {
@@ -40,19 +40,26 @@ export default function Profile({ route, navigation }) {
     }
   };
 
-  const handleEditAvatar = () => {
+  const handleEditAvatar = async () => {
     const formData = new FormData();
+
     formData.append("avatar", {
       uri: avatar,
       name: "avatar.png",
       type: "image/png",
     });
 
+    if (!avatar) {
+      return;
+    }
+
     try {
-      editUserById({ id: data.id, avatar: formData }).unwrap();
-      setAvatar(data.avatar);
+      await editUserById({
+        id: data.id,
+        avatar: formData,
+      }).unwrap();
     } catch (error) {
-      console.log('Error:', error);
+      console.log("Error:", error);
     }
   };
 
@@ -89,7 +96,9 @@ export default function Profile({ route, navigation }) {
       <ProfileSettings
         route={data}
         editProfile={() => navigation.navigate("EditProfile")}
-        editPayment={() => navigation.navigate("SettingsPayment", { route: data })}
+        editPayment={() =>
+          navigation.navigate("SettingsPayment", { route: data })
+        }
         logout={handleLogout}
       />
 

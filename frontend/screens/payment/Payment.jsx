@@ -29,7 +29,6 @@ const Payment = ({ navigation, userData }) => {
 
   const dispatch = useDispatch();
   const cardItem = useSelector(selectCardItem);
-  console.log(cardItem)
   const cartItem = useSelector(selectCartItems);
   const addressItem = useSelector(selectAddressItem);
   const currentPrice = useCurrentPrice();
@@ -86,7 +85,6 @@ const Payment = ({ navigation, userData }) => {
     }
   };
 
-  // console.log(orderData)
 
   return (
     <>

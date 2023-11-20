@@ -2,12 +2,14 @@ import { Injectable, BadRequestException } from '@nestjs/common'
 import { PrismaService } from 'src/prisma.service'
 import { SneakersDto } from './dto/sneakers.dto'
 import { FileService, FileType } from 'src/file/file.service'
+import { OrderService } from 'src/order/order.service'
 
 @Injectable()
 export class SneakersService {
 	constructor(
 		private prisma: PrismaService,
-		private fileService: FileService
+		private fileService: FileService,
+		private orderService: OrderService
 	) {}
 
 	async create(dto: SneakersDto, files) {
@@ -72,7 +74,10 @@ export class SneakersService {
 			}
 		})
 
-		return { ...sneakers, message: 'Sneakers deleted' }
+		return {
+			...sneakers,
+			message: 'Sneakers deleted'
+		}
 	}
 
 	async updateFields(id: string, dto: SneakersDto, files) {
@@ -83,7 +88,9 @@ export class SneakersService {
 
 			data: {
 				...dto,
-				image: files ? this.fileService.createFile(FileType.SNEAKERS, files) : null
+				image: files
+					? this.fileService.createFile(FileType.SNEAKERS, files)
+					: null
 			}
 		})
 

@@ -35,4 +35,9 @@ export class OrderController {
   removeOrderById(@Param('id') id: string) {
     return this.orderService.removeOrderById( id )
   }
+
+  @Delete('delete-order-by-sneaker-id/:sneakerId')
+  removeOrderBySneakerId(@Param('sneakerId') sneakerId: string) {
+    return this.orderService.removeOrderBySneakerId( sneakerId )
+  }
 }

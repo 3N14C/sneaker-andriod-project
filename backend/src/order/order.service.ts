@@ -8,7 +8,6 @@ export class OrderService {
 	constructor(private prisma: PrismaService) {}
 
 	async create(dto: OrderDto) {
-		const currentDateTime = new Date()
 
 		const order = await this.prisma.order.create({
 			data: {
@@ -23,6 +22,21 @@ export class OrderService {
 				}
 			}
 		})
+
+		if (order) {
+			const updateSneaker = await this.prisma.sneaker.update({
+				where: {
+					id: order.sneakerId
+				},
+				data: {
+					soldCount: {
+						set: order.sneaker.soldCount + 1
+					}
+				}
+			})
+
+			return updateSneaker
+		}
 
 		return order
 	}
@@ -108,6 +122,16 @@ export class OrderService {
 		const order = await this.prisma.order.delete({
 			where: {
 				id
+			}
+		})
+
+		return order
+	}
+
+	async removeOrderBySneakerId(sneakerId: string) {
+		const order = await this.prisma.order.deleteMany({
+			where: {
+				sneakerId
 			}
 		})
 

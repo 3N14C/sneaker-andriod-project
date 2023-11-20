@@ -23,7 +23,7 @@ export class FileService {
 
 			fs.writeFileSync(path.resolve(filePath, fileName), file.buffer)
 
-            return 'http://192.168.0.130:4200/' + type + '/' + fileName
+            return 'http://192.168.0.103:4200/' + type + '/' + fileName
 		} catch (error) {
 			throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR)
 		}
