@@ -58,7 +58,7 @@ model Sneaker {
   offer      Offer?  @relation(fields: [offerPrice], references: [discount])
   offerPrice String?
   rating     String  @default("1.0")
-  soldCount  String  @default("0")
+  soldCount  Int  @default(0)
   image      String?
 
   brand       Brand?        @relation(fields: [brandName], references: [name])

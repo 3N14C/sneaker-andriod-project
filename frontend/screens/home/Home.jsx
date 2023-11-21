@@ -19,6 +19,8 @@ import { favoritesSlice } from "../../redux/favourite/favourite.slice";
 
 export default function Home({ route, navigation }) {
   const { data } = route?.params;
+
+  console.log(data)
   
   return (
     <ScrollView style={{ flex: 1 }}>
@@ -28,8 +30,6 @@ export default function Home({ route, navigation }) {
             <Header
               avatar={
                 data.avatar
-                  ? data.avatar
-                  : "https://cdn-icons-png.flaticon.com/512/149/149071.png"
               }
               username={data.username}
               role={data.role}

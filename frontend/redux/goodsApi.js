@@ -6,7 +6,7 @@ import {
 export const goodsApi = createApi({
     reducerPath: 'goodsApi',
     baseQuery: fetchBaseQuery({
-        baseUrl: 'http://192.168.0.130:4200/api',
+        baseUrl: 'http://192.168.0.103:4200/api',
     }),
 
     endpoints: (build) => ({
@@ -24,7 +24,7 @@ export const goodsApi = createApi({
         }),
 
         getById: build.query({
-            query: (id) => `/users/id/${id}`, 
+            query: (id) => `/users/id/${id}`,
         }),
 
         getUserByEmail: build.query({
@@ -50,14 +50,11 @@ export const goodsApi = createApi({
         }),
 
         updateUserById: build.mutation({
-            query: ({
-                    id,
-                    avatar
-                }) => ({
+            query: ({id, avatar}) => ({
                 url: `/users/update/${id}`,
                 method: 'PATCH',
                 body: avatar
-            }),
-        })
-    }),
+            })
+        }),
+    })
 })

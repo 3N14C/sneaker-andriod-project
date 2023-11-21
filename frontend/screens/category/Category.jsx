@@ -22,6 +22,7 @@ export default function Category({ route }) {
   const { brand } = route.params;
   const navigation = useNavigation();
 
+
   const dispatch = useDispatch();
   const favorites = useSelector(selectFavoriteProducts);
 

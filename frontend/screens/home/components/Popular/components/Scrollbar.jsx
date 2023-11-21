@@ -29,7 +29,7 @@ export default function Scrollbar() {
   const currentPrice = useCurrentPrice();
 
   const navigation = useNavigation();
-  const { data = [], isLoading } = brand.useGetAllQuery();
+  const { data = [], isLoading, refetch } = brand.useGetAllQuery();
   const favorites = useSelector(selectFavoriteProducts);
   const dispatch = useDispatch();
 
@@ -53,11 +53,11 @@ export default function Scrollbar() {
     }
   };
 
-  // useFocusEffect(
-  //   React.useCallback(() => {
-  //     refetch();
-  //   }, [])
-  // );
+  useFocusEffect(
+    React.useCallback(() => {
+      refetch();
+    }, [ ])
+  );
 
   return (
     <View style={styles.container}>
@@ -123,7 +123,7 @@ export default function Scrollbar() {
                     <View key={item.id} style={{ ...styles.container_item }}>
                       {item.sneaker.map((sneaker, idx) => {
                         if (
-                          sneaker.soldCount > "6,000" &&
+                          sneaker.soldCount > 6000 &&
                           sneaker.rating > "4.0"
                         )
                           return (
@@ -158,6 +158,7 @@ export default function Scrollbar() {
                                         textAlign: "center",
                                         position: "absolute",
                                         right: 10,
+                                        zIndex: 20
                                       }}
                                       name="heart"
                                       size={15}
@@ -166,7 +167,7 @@ export default function Scrollbar() {
                                       }}
                                     />
                                     <Image
-                                      style={{ width: 100, height: 100 }}
+                                      style={{ width: 100, height: 100, zIndex: 10 }}
                                       source={{ uri: sneaker.image }}
                                     />
                                   </View>
@@ -226,7 +227,7 @@ export default function Scrollbar() {
                     <View key={item.id} style={{ ...styles.container_item }}>
                       {item.sneaker.map((sneaker, idx) => {
                         if (
-                          sneaker.soldCount > "6,000" &&
+                          sneaker.soldCount > 6000 &&
                           sneaker.rating > "4.0"
                         )
                           return (

@@ -6,5 +6,5 @@ export class SneakersDto {
 	price: string
     sizeNumber: string
 	rating: string
-	soldCount: string
+	soldCount: number
 }
