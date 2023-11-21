@@ -6,7 +6,7 @@ import {
 export const brand = createApi({
     reducerPath: 'brand',
     baseQuery: fetchBaseQuery({
-        baseUrl: 'http://192.168.0.103:4200/api'
+        baseUrl: 'http://192.168.0.130:4200/api'
     }),
     endpoints: (build) => ({
         getAll: build.query({

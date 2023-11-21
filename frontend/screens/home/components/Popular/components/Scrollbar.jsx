@@ -56,7 +56,7 @@ export default function Scrollbar() {
   useFocusEffect(
     React.useCallback(() => {
       refetch();
-    }, [ ])
+    }, [ focus ])
   );
 
   return (

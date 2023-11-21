@@ -172,7 +172,7 @@ const TrackOrder = ({ route }) => {
                 ? "#3f3f40"
                 : "#9f9f9f"
             }
-            line={" - - - - - "}
+            line={"- - - - -  "}
             iconName={"truck"}
           />
 
@@ -262,6 +262,7 @@ const styles = StyleSheet.create({
   orderStatus: {
     flexDirection: "row",
     alignItems: "flex-end",
+    gap: 10
   },
 
   line: {

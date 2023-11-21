@@ -85,6 +85,7 @@ export default function Category({ route }) {
                       paddingHorizontal: 2,
                       paddingVertical: 10,
                       width: 40,
+                      height: 40,
                       borderRadius: 50,
                       textAlign: "center",
                       position: "absolute",

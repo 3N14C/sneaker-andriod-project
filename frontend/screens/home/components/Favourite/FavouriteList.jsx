@@ -75,7 +75,7 @@ export default function FavouriteList() {
                     }}
                   >
                     <Icon
-                      style={{ color: "#101010" }}
+                      style={{ color: "#101010", width: 10, height: 10 }}
                       solid
                       name="star"
                       size={14}
@@ -84,7 +84,7 @@ export default function FavouriteList() {
                       {sneaker.rating} |{" "}
                     </Text>
                     <Text style={{ ...styles.soldCount }}>
-                      {sneaker.soldCount} sold
+                      {sneaker.soldCount} продано
                     </Text>
                   </View>
                   <Text style={{ ...styles.sneakerPrice }}>

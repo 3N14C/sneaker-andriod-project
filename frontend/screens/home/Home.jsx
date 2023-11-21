@@ -12,25 +12,17 @@ import Brand from "./components/Brand/Brand";
 import Offer from "./components/offer/Offer";
 import Popular from "./components/Popular/Popular";
 import HomeAdmin from "../../admin/screens/home/HomeAdmin";
-import { useSelector } from "react-redux";
-import { selectFavoriteProducts } from "../../hooks/useSelector";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { favoritesSlice } from "../../redux/favourite/favourite.slice";
 
 export default function Home({ route, navigation }) {
   const { data } = route?.params;
 
-  console.log(data)
-  
   return (
     <ScrollView style={{ flex: 1 }}>
       <View style={styles.container}>
         {data.role !== "ADMIN" ? (
           <>
             <Header
-              avatar={
-                data.avatar
-              }
+              avatar={data.avatar}
               username={data.username}
               role={data.role}
             />
@@ -42,7 +34,12 @@ export default function Home({ route, navigation }) {
                 onPress={() => navigation.navigate("Special Offers")}
               >
                 <Text
-                  style={{ ...styles.title, fontSize: 15, maxWidth: "100%", padding: 20 }}
+                  style={{
+                    ...styles.title,
+                    fontSize: 15,
+                    maxWidth: "100%",
+                    padding: 20,
+                  }}
                 >
                   Посмотреть все
                 </Text>

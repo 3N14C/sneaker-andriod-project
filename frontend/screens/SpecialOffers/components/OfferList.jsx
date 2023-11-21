@@ -109,7 +109,7 @@ export default function OfferList({ route }) {
                     </Text>
 
                     <Text style={{ ...styles.soldCount }}>
-                      {sneaker.soldCount} sold
+                      {sneaker.soldCount} продано
                     </Text>
                   </View>
                   <Text style={{ ...styles.sneakerPrice }}>

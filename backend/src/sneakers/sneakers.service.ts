@@ -88,9 +88,8 @@ export class SneakersService {
 
 			data: {
 				...dto,
-				image: files
-					? this.fileService.createFile(FileType.SNEAKERS, files)
-					: null
+				soldCount: +dto.soldCount,
+				image: files ? files : null
 			}
 		})
 

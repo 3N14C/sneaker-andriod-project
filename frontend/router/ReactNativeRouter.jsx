@@ -199,7 +199,7 @@ export default function ReactNativeRouter({}) {
                 headerShadowVisible: false,
                 headerTitle: "Квитанция",
               }}
-              name="Receipt"
+              name="Квитанция"
               component={Receipt}
             />
           </Stack.Group>
