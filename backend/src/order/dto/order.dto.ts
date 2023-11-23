@@ -4,6 +4,5 @@ export class OrderDto {
     address: string
     barcode: string
     roadmapDelivery: string[]
-    statusDelivery: string
     soldCount: number
 }

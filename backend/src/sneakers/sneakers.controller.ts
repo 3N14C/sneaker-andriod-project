@@ -27,7 +27,7 @@ export class SneakersController {
 		FileFieldsInterceptor([
 			{
 				name: 'image',
-				maxCount: 1
+				maxCount: 7
 			}
 		])
 	)

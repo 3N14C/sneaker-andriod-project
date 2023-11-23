@@ -7,4 +7,5 @@ export class SneakersDto {
     sizeNumber: string
 	rating: string
 	soldCount: number
+	description: string
 }

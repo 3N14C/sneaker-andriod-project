@@ -1,4 +1,4 @@
-import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Image, SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React from "react";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import Icon from "react-native-vector-icons/FontAwesome5";
@@ -35,7 +35,6 @@ export default function OfferList({ route }) {
 
   return (
     <View style={styles.container}>
-      <Text>
         {data.sneaker.map((sneaker, index) => {
           return (
             <View key={sneaker.id}>
@@ -87,7 +86,7 @@ export default function OfferList({ route }) {
                   </View>
                   <Text style={styles.sneakerName}>
                     {sneaker.name.length >= 20
-                      ? `${sneaker.name.slice(0, 20)}...`
+                      ? `${sneaker.name.slice(0, 15)}...`
                       : sneaker.name}
                   </Text>
                   <View
@@ -155,9 +154,6 @@ export default function OfferList({ route }) {
             </View>
           );
         })}
-      </Text>
-
-      <View></View>
     </View>
   );
 }
@@ -167,7 +163,10 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#fff",
     paddingTop: 20,
-    paddingHorizontal: 30,
+    paddingHorizontal: 25,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between'
   },
 
   sneakerName: {
@@ -203,12 +202,5 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     paddingHorizontal: 30,
     paddingBottom: 10,
-  },
-
-  container_item: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    alignItems: "center",
-    justifyContent: "space-between",
   },
 });

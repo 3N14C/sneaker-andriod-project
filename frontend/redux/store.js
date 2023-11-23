@@ -35,7 +35,7 @@ import { order } from "./order";
 const persistConfig = {
     key: "root",
     storage: AsyncStorage,
-    whitelist: ["favorites", "cart", "order", "address", "card"],
+    whitelist: ["favorites", "cart", "address", "card"],
 }
 
 const persistedReducer = persistReducer(persistConfig, combineReducers({

@@ -31,6 +31,16 @@ export const order = createApi({
 
         getOrdersByUser: build.query({
             query: (id) => `/order/user-orders/${id}`
+        }),
+
+        updateOrderRoadmap: build.mutation({
+            query: ({id, roadmapDelivery}) => ({
+                url: `/order/update-status-order-by-id/${id}`,
+                method: 'PATCH',
+                body: {
+                    roadmapDelivery
+                }
+            })
         })
     })
 })

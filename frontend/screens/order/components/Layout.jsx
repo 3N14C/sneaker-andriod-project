@@ -1,14 +1,8 @@
-import {
-  Animated,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
 import React from "react";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
-const Layout = ({ children }) => {
-  const [fadeAnim] = React.useState(new Animated.Value(0));
+const Layout = ({ activeOrders, completedOrders }) => {
+  const [focus, setFocus] = React.useState("Активные");
 
   return (
     <View
@@ -23,21 +17,31 @@ const Layout = ({ children }) => {
           alignItems: "center",
         }}
       >
-        <TouchableOpacity onPress={() => {}}>
+        <TouchableOpacity
+          onPress={() => {
+            setFocus("Активные");
+          }}
+        >
           <Text
             style={{
               ...styles.navbarItem,
+              color: focus === "Активные" ? "rgb( 69, 69, 69)" : "#c2c2c2",
             }}
           >
             Активные
           </Text>
         </TouchableOpacity>
 
-        <TouchableOpacity onPress={() => {}}>
+        <TouchableOpacity
+          onPress={() => {
+            setFocus("Завершенные");
+          }}
+        >
           <Text
             style={{
               ...styles.navbarItem,
               marginLeft: 70,
+              color: focus === "Завершенные" ? "rgb( 69, 69, 69)" : "#c2c2c2",
             }}
           >
             Завершенные
@@ -45,7 +49,7 @@ const Layout = ({ children }) => {
         </TouchableOpacity>
       </View>
 
-      <View>{children}</View>
+      <View>{focus === "Активные" ? activeOrders : completedOrders}</View>
     </View>
   );
 };

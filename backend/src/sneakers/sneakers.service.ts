@@ -20,6 +20,7 @@ export class SneakersService {
 				brandName: dto.brandName,
 				offerPrice: dto.offerPrice,
 				price: dto.price,
+				description: dto.description,
 				image: imagePath,
 
 				size: {
@@ -88,7 +89,7 @@ export class SneakersService {
 
 			data: {
 				...dto,
-				soldCount: +dto.soldCount,
+				// soldCount: +dto.soldCount,
 				image: files ? files : null
 			}
 		})

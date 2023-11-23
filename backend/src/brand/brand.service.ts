@@ -72,13 +72,13 @@ export class BrandService {
 		return brand
 	}
 
-	async changeLogoById(id: string, files) {
+	async changeLogoById(id: string, files: any[]) {
 		const brand = await this.prisma.brand.update({
 			where: {
 				id
 			},
 			data: {
-				logo: this.fileService.createFile(FileType.BRAND, files),
+				logo: this.fileService.createFile(FileType.BRAND, files) 
 			}
 		})
 

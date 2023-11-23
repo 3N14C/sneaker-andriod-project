@@ -90,6 +90,7 @@ export default function Category({ route }) {
                       textAlign: "center",
                       position: "absolute",
                       right: 10,
+                      zIndex: 20
                     }}
                     name="heart"
                     size={15}
@@ -98,13 +99,13 @@ export default function Category({ route }) {
                     }}
                   />
                   <Image
-                    style={{ width: 100, height: 100 }}
+                    style={{ width: 100, height: 100, zIndex: 10 }}
                     source={{ uri: item.image }}
                   />
                 </View>
                 <Text style={styles.sneakerName}>
                   {item.name.length > 20
-                    ? `${item.name.slice(0, 20)}...`
+                    ? `${item.name.slice(0, 15)}...`
                     : item.name}
                 </Text>
                 <View

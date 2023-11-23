@@ -151,12 +151,7 @@ export default function TodayOffer({}) {
 
                     {item.sneaker.map((sneaker, idx) => (
                       <View key={sneaker.id}>
-                        {idx === randomIdxSneaker ? (
-                          <Image
-                            style={{ width: 160, height: 100 }}
-                            source={{ uri: sneaker.image }}
-                          />
-                        ) : (
+                        {idx === randomIdxSneaker && (
                           <Image
                             style={{ width: 160, height: 100 }}
                             source={{ uri: sneaker.image }}

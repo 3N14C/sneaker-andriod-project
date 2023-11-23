@@ -1,4 +1,4 @@
-import { Image, StyleSheet, Text, View } from "react-native";
+import { Image, ScrollView, StyleSheet, Text, View } from "react-native";
 import React from "react";
 import useCurrentPrice from "../../../../hooks/useCurrentPrice";
 import Icon from "react-native-vector-icons/FontAwesome5";
@@ -56,45 +56,150 @@ const TrackOrder = ({ route }) => {
   const currentPrice = useCurrentPrice();
 
   return (
-    <View
+    <ScrollView
       style={{
         flex: 1,
         paddingVertical: 20,
-        backgroundColor: "#fbfbfb",
-        paddingHorizontal: 20
+        backgroundColor: "#fff",
+        paddingHorizontal: 20,
       }}
+      showsVerticalScrollIndicator={false}
     >
-      <View
-        style={{
-          alignItems: "center",
-        }}
-      >
+      <View>
         <View
           style={{
-            backgroundColor: "#fff",
-            flexDirection: "row",
             alignItems: "center",
-            padding: 20,
-            gap: 10,
-            borderRadius: 20,
-            width: '100%'
           }}
         >
-          <Image
+          <View
             style={{
-              width: 100,
-              height: 100,
-              backgroundColor: "#f0f0f0",
-              borderRadius: 10,
+              backgroundColor: "#fff",
+              flexDirection: "row",
+              alignItems: "center",
+              padding: 20,
+              gap: 10,
+              borderRadius: 20,
+              width: "100%",
             }}
-            source={{ uri: orderItem?.image }}
-          />
+          >
+            <Image
+              style={{
+                width: 100,
+                height: 100,
+                backgroundColor: "#f0f0f0",
+                borderRadius: 10,
+              }}
+              source={{ uri: orderItem?.image }}
+            />
+
+            <View
+              style={{
+                marginTop: -10,
+              }}
+            >
+              <Text
+                style={{
+                  fontSize: 16,
+                  fontWeight: "bold",
+                  color: "#000",
+                  marginVertical: 10,
+                }}
+              >
+                {orderItem?.name}
+              </Text>
+
+              <View
+                style={{
+                  flexDirection: "row",
+                }}
+              >
+                <Text
+                  style={{
+                    ...styles.sneakerSize,
+                  }}
+                >
+                  {orderItem.size[0].name}
+                </Text>
+              </View>
+
+              <Text
+                style={{
+                  ...styles.price,
+                }}
+              >
+                {orderItem.offerPrice
+                  ? parseFloat(
+                      (+orderItem.price *
+                        currentPrice *
+                        +orderItem.offerPrice) /
+                        100
+                    ).toLocaleString("ru-RU", {
+                      style: "currency",
+                      currency: "RUB",
+                    })
+                  : parseFloat(+orderItem.price * currentPrice).toLocaleString(
+                      "ru-RU",
+                      {
+                        style: "currency",
+                        currency: "RUB",
+                      }
+                    )}
+              </Text>
+            </View>
+          </View>
 
           <View
             style={{
-              marginTop: -10,
+              flexDirection: "row",
+              alignItems: "center",
+              marginVertical: 20,
             }}
           >
+            <OrderStatus
+              color={
+                order.statusDelivery === "box" ||
+                order.statusDelivery === "truck" ||
+                order.statusDelivery === "user-tie" ||
+                order.statusDelivery === "box-open"
+                  ? "#3f3f40"
+                  : "#9f9f9f"
+              }
+              line={" - - - - - "}
+              iconName={"box"}
+            />
+
+            <OrderStatus
+              color={
+                order.statusDelivery === "truck" ||
+                order.statusDelivery === "user-tie" ||
+                order.statusDelivery === "box-open"
+                  ? "#3f3f40"
+                  : "#9f9f9f"
+              }
+              line={"- - - - -  "}
+              iconName={"truck"}
+            />
+
+            <OrderStatus
+              color={
+                order.statusDelivery === "user-tie" ||
+                order.statusDelivery === "box-open"
+                  ? "#3f3f40"
+                  : "#9f9f9f"
+              }
+              line={" - - - - - "}
+              iconName={"user-tie"}
+            />
+
+            <OrderStatus
+              color={
+                order.statusDelivery === "box-open" ? "#3f3f40" : "#9f9f9f"
+              }
+              iconName={"box-open"}
+            />
+          </View>
+
+          <View style={{}}>
             <Text
               style={{
                 fontSize: 16,
@@ -103,99 +208,24 @@ const TrackOrder = ({ route }) => {
                 marginVertical: 10,
               }}
             >
-              {orderItem?.name}
-            </Text>
-
-            <View
-              style={{
-                flexDirection: "row",
-              }}
-            >
-              <Text
-                style={{
-                  ...styles.sneakerSize,
-                }}
-              >
-                {orderItem.size[0].name}
-              </Text>
-            </View>
-
-            <Text
-              style={{
-                ...styles.price,
-              }}
-            >
-              {orderItem.offerPrice
-                ? parseFloat(
-                    (+orderItem.price * currentPrice * +orderItem.offerPrice) /
-                      100
-                  ).toLocaleString("ru-RU", {
-                    style: "currency",
-                    currency: "RUB",
-                  })
-                : parseFloat(+orderItem.price * currentPrice).toLocaleString(
-                    "ru-RU",
-                    {
-                      style: "currency",
-                      currency: "RUB",
-                    }
-                  )}
+              {order.statusDelivery === "box"
+                ? "В процессе сборки"
+                : order.statusDelivery === "truck"
+                ? "В пути"
+                : order.statusDelivery === "user-tie"
+                ? "Передано курьеру"
+                : "Доставлено"}
             </Text>
           </View>
-        </View>
 
-        <View
-          style={{
-            flexDirection: "row",
-            alignItems: "center",
-            marginVertical: 20,
-          }}
-        >
-          <OrderStatus
-            color={
-              order.statusDelivery === "box" ||
-              order.statusDelivery === "truck" ||
-              order.statusDelivery === "user-tie" ||
-              order.statusDelivery === "box-open"
-                ? "#3f3f40"
-                : "#9f9f9f"
-            }
-            line={" - - - - - "}
-            iconName={"box"}
-          />
-
-          <OrderStatus
-            color={
-              order.statusDelivery === "truck" ||
-              order.statusDelivery === "user-tie" ||
-              order.statusDelivery === "box-open"
-                ? "#3f3f40"
-                : "#9f9f9f"
-            }
-            line={"- - - - -  "}
-            iconName={"truck"}
-          />
-
-          <OrderStatus
-            color={
-              order.statusDelivery === "user-tie" || order.statusDelivery === "box-open"
-                ? "#3f3f40"
-                : "#9f9f9f"
-            }
-            line={" - - - - - "}
-            iconName={"user-tie"}
-          />
-
-          <OrderStatus
-            color={order.statusDelivery === "box-open" ? "#3f3f40" : "#9f9f9f"}
-            iconName={"box-open"}
+          <View
+            style={{
+              ...styles.line,
+            }}
           />
         </View>
 
-        <View
-          style={{
-          }}
-        >
+        <View>
           <Text
             style={{
               fontSize: 16,
@@ -203,29 +233,86 @@ const TrackOrder = ({ route }) => {
               color: "#000",
               marginVertical: 10,
             }}
-          >{order.statusDeliveryDescription}</Text>
+          >
+            Подробности статуса заказа
+          </Text>
+
+          <View
+            style={{
+              ...styles.roadmapDelivery,
+            }}
+          >
+            {order.roadmapDelivery.map((road, idx) => (
+              <View style={{  }} key={idx}>
+                <View style={{ flexDirection: "row", gap: 20 }}>
+                  <View>
+                    <View style={{ ...styles.containerPoint }}>
+                      <View style={{ ...styles.point }} />
+                    </View>
+                    <Text
+                      style={{
+                        color: "#9f9f9f",
+                        fontSize: 12,
+                        flexWrap: "wrap",
+                        width: 5,
+                        marginLeft: 10,
+                      }}
+                    >
+                      {idx !== 0 && "| | | | |"}
+                    </Text>
+                  </View>
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      alignItems: "flex-start",
+                      justifyContent: "space-between",
+                      width: 300,
+                      marginTop: -10,
+                    }}
+                  >
+                    <View>
+                      <Text
+                        style={{
+                          fontWeight: "bold",
+                          color: "#000",
+                          fontSize: 16,
+                          maxWidth: road?.status.length > 20 ? 250 : 'auto' ,
+                        }}
+                      >
+                        {`${road.status} - ${new Date(road.date).toLocaleString(
+                          "default",
+                          {
+                            day: "numeric",
+                            month: "long",
+                          }
+                        )}`}
+                      </Text>
+
+                      <Text
+                        style={{ color: "#aaaaaa", fontSize: 12, marginTop: 5 }}
+                      >{`${road.address}`}</Text>
+                    </View>
+
+                    <Text
+                      style={{
+                        color: "#aaaaaa",
+                        fontSize: 12,
+                        marginTop: 3
+                      }}
+                    >
+                      {new Date(road.date).toLocaleString("default", {
+                        hour: "numeric",
+                        minute: "numeric",
+                      })}
+                    </Text>
+                  </View>
+                </View>
+              </View>
+            ))}
+          </View>
         </View>
-
-        <View 
-          style={{
-            ...styles.line
-          }}
-        />
       </View>
-
-      <View>
-        <Text
-          style={{
-            fontSize: 16,
-            fontWeight: "bold",
-            color: "#000",
-            marginVertical: 10,
-          }}
-        >
-          Подробности статуса заказа
-        </Text>
-      </View>
-    </View>
+    </ScrollView>
   );
 };
 
@@ -262,13 +349,35 @@ const styles = StyleSheet.create({
   orderStatus: {
     flexDirection: "row",
     alignItems: "flex-end",
-    gap: 10
+    gap: 10,
+  },
+
+  roadmapDelivery: {
+    // flex: 1,
+    flexDirection: "column-reverse",
+    alignItems: "flex-start",
+    // justifyContent: "flex-end",
+    marginVertical: 20,
   },
 
   line: {
     width: "100%",
     height: 1,
     backgroundColor: "##c6c6c6",
-    marginVertical: 20
-  }
+    marginVertical: 20,
+  },
+
+  containerPoint: {
+    borderWidth: 2,
+    padding: 5,
+    borderRadius: 50,
+    borderColor: "#101010",
+  },
+
+  point: {
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+    backgroundColor: "#101010",
+  },
 });

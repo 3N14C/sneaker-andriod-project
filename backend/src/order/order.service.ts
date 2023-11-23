@@ -8,10 +8,16 @@ export class OrderService {
 	constructor(private prisma: PrismaService) {}
 
 	async create(dto: OrderDto) {
-
 		const order = await this.prisma.order.create({
 			data: {
-				...dto
+				...dto,
+				roadmapDelivery: [
+					{
+						status: 'Платеж подтвержден',
+						address: 'Иркутск, ул. Ленина, 1',
+						date: new Date().toISOString()
+					}
+				]
 			},
 
 			include: {
@@ -93,29 +99,45 @@ export class OrderService {
 		return order
 	}
 
-	async updateStatusOrderById(
-		id: string,
-		statusDelivery: string,
-		statusDeliveryDescription: string
-	) {
+	async updateStatusOrderById(id: string, dto: OrderDto) {
 		const order = await this.prisma.order.update({
 			where: {
 				id
 			},
 			data: {
-				statusDelivery,
-				statusDeliveryDescription:
-					statusDelivery === 'truck'
-						? 'В пути'
-						: statusDelivery === 'user-tie'
-						? 'Передано курьеру'
-						: statusDelivery === 'box-open'
-						? 'Доставлено'
-						: 'В процессе сборки'
+				...dto,
+				roadmapDelivery: {
+					push: {
+						...dto.roadmapDelivery,
+						date: new Date().toISOString()
+					}
+				}
 			}
 		})
 
-		return order
+		return {
+			...order,
+			message: 'Order updated | Roadmap added'
+		}
+	}
+
+	async deleteOrderStatusById(id: string, dto: OrderDto) {
+		const order = await this.prisma.order.update({
+			where: {
+				id
+			},
+			data: {
+				...dto,
+				roadmapDelivery: {
+					set: []
+				}
+			}
+		})
+
+		return {
+			...order,
+			message: 'Order updated | Roadmap deleted'
+		}
 	}
 
 	async removeOrderById(id: string) {

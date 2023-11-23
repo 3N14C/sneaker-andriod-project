@@ -10,7 +10,7 @@ import ModalSuccessfulPayment from "./components/ModalSuccessfulPayment";
 import useCurrentPrice from "../../hooks/useCurrentPrice";
 import ModalErrorPayment from "./components/ModalErrorPayment";
 import { order } from "../../redux/order";
-import { addItemToCart, removeItemFromCart } from "../../redux/cart/cart.slice";
+import { removeItemFromCart } from "../../redux/cart/cart.slice";
 
 const Payment = ({ navigation, userData }) => {
   React.useEffect(() => {
@@ -75,7 +75,7 @@ const Payment = ({ navigation, userData }) => {
       });
       cartItemsId.forEach((item) => {
         dispatch(removeItemFromCart(item));
-      })
+      });
       setModalSuccessfulVisible(true);
     } else if (
       isChecked !== false &&
@@ -84,7 +84,6 @@ const Payment = ({ navigation, userData }) => {
       setErrorVisible(true);
     }
   };
-
 
   return (
     <>

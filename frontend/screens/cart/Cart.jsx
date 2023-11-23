@@ -122,7 +122,7 @@ export default function Cart({route}) {
                       <Text
                         style={{
                           ...styles.sneakerSize,
-                          marginTop: sneaker.name.length > 15 ? 10 : 0,
+                          marginTop: sneaker.name.length > 15 ? 10 : 10,
                         }}
                       >
                         {sneaker.size}

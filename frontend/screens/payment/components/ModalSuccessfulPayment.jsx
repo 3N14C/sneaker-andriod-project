@@ -10,6 +10,7 @@ import {
 import React from "react";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import { useNavigation } from "@react-navigation/native";
+import { order } from "../../../redux/order";
 
 const ModalSuccessfulPayment = ({ modalVisible, closeModal }) => {
   const navigation = useNavigation();
@@ -70,7 +71,7 @@ const ModalSuccessfulPayment = ({ modalVisible, closeModal }) => {
                 marginTop: 20,
               }}
             >
-              Ошибка платежа!
+              Оплата прошла успешно
             </Text>
 
             <Text
@@ -81,7 +82,7 @@ const ModalSuccessfulPayment = ({ modalVisible, closeModal }) => {
                 color: "#5c5d5e",
               }}
             >
-              На вашем балансе недостаточно средств
+              Вы успешно оплатили заказ
             </Text>
 
             <TouchableOpacity

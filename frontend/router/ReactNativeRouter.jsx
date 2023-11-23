@@ -44,7 +44,7 @@ export default function ReactNativeRouter({}) {
               component={Login}
             />
             <Stack.Screen
-              options={{ animation: "slide_from_right" }}
+              options={{ animation: "slide_from_right", headerShown: false }}
               name="Register"
               component={Register}
             />

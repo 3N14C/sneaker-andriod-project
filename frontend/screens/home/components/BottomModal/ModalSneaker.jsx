@@ -1,11 +1,8 @@
-import {
-  useFocusEffect,
-  useNavigation,
-  useRoute,
-} from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import {
   Image,
   Modal,
+  ScrollView,
   StyleSheet,
   Text,
   TouchableHighlight,
@@ -20,12 +17,13 @@ import { selectCartItems } from "../../../../hooks/useSelector";
 import { addItemToCart } from "../../../../redux/cart/cart.slice";
 import { useToast } from "react-native-toast-notifications";
 import useCurrentPrice from "../../../../hooks/useCurrentPrice";
-
 export const ModalSneaker = ({ modalVisible, closeBottomSheet }) => {
   const [focus, setFocus] = React.useState(false);
-  const currentPrice = useCurrentPrice()
+  const currentPrice = useCurrentPrice();
 
   const { data: modelSize = [], refetch } = sizeSneaker.useGetSizesQuery();
+  const sortedModelSize = [...modelSize].sort((a, b) => a.name - b.name);
+
   const cartSneaker = useSelector(selectCartItems);
   const dispatch = useDispatch();
   const route = useRoute();
@@ -47,7 +45,7 @@ export const ModalSneaker = ({ modalVisible, closeBottomSheet }) => {
         duration: 2000,
         animationType: "slide-in",
         onPress() {
-          navigation.navigate("Корзина")
+          navigation.navigate("Корзина");
         },
         style: {
           backgroundColor: cartSneaker.items
@@ -121,244 +119,262 @@ export const ModalSneaker = ({ modalVisible, closeBottomSheet }) => {
   };
 
   return (
-    <View style={{ flex: 1 }}>
+    <View showsVerticalScrollIndicator={false} style={{ flex: 1 }}>
       <Modal
         visible={modalVisible}
         transparent={true}
         animationType="slide"
         onRequestClose={closeBottomSheet}
       >
-        <TouchableOpacity
-          style={{
-            flex: 1,
-            justifyContent: "flex-end",
-            backgroundColor: "rgba(0, 0, 0, 0.5)",
-          }}
-          activeOpacity={1}
-        >
-          <View style={{ paddingVertical: 0 }}>
-            <View style={{ backgroundColor: "#f3f3f3" }}>
-              <Icon
-                style={{ position: "absolute", left: 10, top: 20 }}
-                onPress={closeBottomSheet}
-                name="close"
-                size={30}
-              />
-              <View style={{ alignItems: "center" }}>
-                <Image
+        <ScrollView showsVerticalScrollIndicator={false}>
+          <TouchableOpacity
+            style={{
+              flex: 1,
+              justifyContent: "flex-end",
+              backgroundColor: "rgba(0, 0, 0, 0.5)",
+            }}
+            activeOpacity={1}
+          >
+            <View style={{ paddingVertical: 0 }}>
+              <View style={{ backgroundColor: "#f3f3f3" }}>
+                <Icon
                   style={{
-                    width: 300,
-                    height: 300,
+                    position: "absolute",
+                    left: 10,
+                    top: 20,
+                    zIndex: 20,
                   }}
-                  source={{ uri: sneaker?.image }}
+                  onPress={closeBottomSheet}
+                  name="arrow-left"
+                  size={30}
                 />
-              </View>
-
-              <View style={{ ...styles.container }}>
-                <Text style={styles.sneakerTitle}>{sneaker?.name}</Text>
-
-                <View style={{ ...styles.sneakerParams }}>
-                  <Text style={styles.soldCount}>
-                    {sneaker?.soldCount} продано
-                  </Text>
-
-                  <View style={{ flexDirection: "row", alignItems: "center" }}>
-                    <Icon
-                      style={{ color: "#101010" }}
-                      solid
-                      name="star"
-                      size={20}
-                    />
-                    <Text>{sneaker?.rating}</Text>
-                  </View>
-                </View>
-
-                <View>
-                  <View
+                <View style={{ alignItems: "center" }}>
+                  <Image
+                    source={{ uri: sneaker?.image }}
                     style={{
-                      height: 1,
-                      backgroundColor: "#ededed",
-                      marginVertical: 20,
+                      width: "100%",
+                      height: 300,
+                      resizeMode: "cover",
+                      zIndex: 10,
                     }}
                   />
+                </View>
 
-                  <View>
-                    <Text style={{ fontWeight: "bold", fontSize: 20 }}>
-                      Описание
+                <View style={{ ...styles.container }}>
+                  <Text style={styles.sneakerTitle}>{sneaker?.name}</Text>
+
+                  <View style={{ ...styles.sneakerParams }}>
+                    <Text style={styles.soldCount}>
+                      {sneaker?.soldCount} продано
                     </Text>
-                    <Text>{sneaker?.description || "lorem"}</Text>
-                  </View>
 
-                  <View
-                    style={{
-                      flexDirection: "row",
-                      alignItems: "center",
-                      justifyContent: "space-between",
-                      marginTop: 20,
-                    }}
-                  >
-                    <View>
-                      <Text style={{ fontWeight: "bold", fontSize: 20 }}>
-                        Размер
-                      </Text>
-
-                      <View
-                        style={{ flexDirection: "row", alignItems: "center" }}
-                      >
-                        {modelSize.map((size, idx) => {
-                          return (
-                            <TouchableOpacity
-                              key={size.id}
-                              onPress={() => {
-                                onFocus(idx);
-                              }}
-                              style={{}}
-                            >
-                              <Text
-                                style={{
-                                  ...styles.sneakerSize,
-                                  color:
-                                    focus === idx &&
-                                    size?.sneaker
-                                      .map((size) => size.name)
-                                      .includes(sneaker?.name)
-                                      ? "white"
-                                      : "black",
-                                  borderColor: size?.sneaker
-                                    .map((size) => size.name)
-                                    .includes(sneaker?.name)
-                                    ? "black"
-                                    : "#6f7071",
-                                  opacity: size?.sneaker
-                                    .map((size) => size.name)
-                                    .includes(sneaker?.name)
-                                    ? 1
-                                    : 0.2,
-                                  marginLeft: idx !== 0 ? 10 : 0,
-                                  backgroundColor:
-                                    focus === idx &&
-                                    size?.sneaker
-                                      .map((size) => size.name)
-                                      .includes(sneaker?.name)
-                                      ? "#101010"
-                                      : "#fff",
-                                }}
-                              >
-                                {size.name}
-                              </Text>
-                            </TouchableOpacity>
-                          );
-                        })}
-                      </View>
+                    <View
+                      style={{ flexDirection: "row", alignItems: "center" }}
+                    >
+                      <Icon
+                        style={{ color: "#101010" }}
+                        solid
+                        name="star"
+                        size={20}
+                      />
+                      <Text>{sneaker?.rating}</Text>
                     </View>
                   </View>
 
-                  <View style={{ ...styles.containerItem }}>
-                    <View>
-                      <Text style={{ ...styles.priceTitle }}>
-                        Итоговая цена
-                      </Text>
+                  <View>
+                    <View
+                      style={{
+                        height: 1,
+                        backgroundColor: "#ededed",
+                        marginVertical: 20,
+                      }}
+                    />
 
-                      {sneaker?.offerPrice ? (
+                    <View>
+                      <Text style={{ fontWeight: "bold", fontSize: 20 }}>
+                        Описание
+                      </Text>
+                      <Text>{sneaker?.description || "lorem"}</Text>
+                    </View>
+
+                    <View
+                      style={{
+                        flexDirection: "row",
+                        alignItems: "center",
+                        justifyContent: "space-between",
+                        marginTop: 20,
+                      }}
+                    >
+                      <View>
+                        <Text style={{ fontWeight: "bold", fontSize: 20 }}>
+                          Размер
+                        </Text>
+
                         <View
-                          style={{ flexDirection: "column", alignItems: "center" }}
+                          style={{ flexDirection: "row", alignItems: "center" }}
                         >
-                          <Text
+                          {sortedModelSize.map((size, idx) => {
+                            return (
+                              <TouchableOpacity
+                                key={size.id}
+                                onPress={() => {
+                                  onFocus(idx);
+                                }}
+                                style={{}}
+                              >
+                                <Text
+                                  style={{
+                                    ...styles.sneakerSize,
+                                    color:
+                                      focus === idx &&
+                                      size?.sneaker
+                                        .map((size) => size.name)
+                                        .includes(sneaker?.name)
+                                        ? "white"
+                                        : "black",
+                                    borderColor: size?.sneaker
+                                      .map((size) => size.name)
+                                      .includes(sneaker?.name)
+                                      ? "black"
+                                      : "#6f7071",
+                                    opacity: size?.sneaker
+                                      .map((size) => size.name)
+                                      .includes(sneaker?.name)
+                                      ? 1
+                                      : 0.2,
+                                    marginLeft: idx !== 0 ? 10 : 0,
+                                    backgroundColor:
+                                      focus === idx &&
+                                      size?.sneaker
+                                        .map((size) => size.name)
+                                        .includes(sneaker?.name)
+                                        ? "#101010"
+                                        : "#fff",
+                                  }}
+                                >
+                                  {size.name}
+                                </Text>
+                              </TouchableOpacity>
+                            );
+                          })}
+                        </View>
+                      </View>
+                    </View>
+
+                    <View style={{ ...styles.containerItem }}>
+                      <View>
+                        <Text style={{ ...styles.priceTitle }}>
+                          Итоговая цена
+                        </Text>
+
+                        {sneaker?.offerPrice ? (
+                          <View
                             style={{
-                              ...styles.sneakerPrice,
-                              fontSize: 14,
-                              marginRight: 10,
-                              textDecorationLine: "line-through",
-                              color: '#ccc',
+                              flexDirection: "column",
+                              alignItems: "center",
                             }}
                           >
-                            {parseFloat(+sneaker?.price * currentPrice).toLocaleString(
-                              "ru-RU",
-                              {
+                            <Text
+                              style={{
+                                ...styles.sneakerPrice,
+                                fontSize: 14,
+                                marginRight: 10,
+                                textDecorationLine: "line-through",
+                                color: "#ccc",
+                              }}
+                            >
+                              {parseFloat(
+                                +sneaker?.price * currentPrice
+                              ).toLocaleString("ru-RU", {
                                 style: "currency",
                                 currency: "RUB",
-                              }
-                            )}
-                          </Text>
+                              })}
+                            </Text>
 
+                            <Text style={{ ...styles.sneakerPrice }}>
+                              {parseFloat(
+                                (+sneaker?.price *
+                                  currentPrice *
+                                  +sneaker?.offerPrice) /
+                                  100
+                              ).toLocaleString("ru-RU", {
+                                style: "currency",
+                                currency: "RUB",
+                              })}
+                            </Text>
+                          </View>
+                        ) : (
                           <Text style={{ ...styles.sneakerPrice }}>
                             {parseFloat(
-                              (+sneaker?.price * currentPrice * +sneaker?.offerPrice) / 100
+                              +sneaker?.price * currentPrice
                             ).toLocaleString("ru-RU", {
                               style: "currency",
                               currency: "RUB",
                             })}
                           </Text>
-                        </View>
-                      ) : (
-                        <Text style={{ ...styles.sneakerPrice }}>
-                          {parseFloat(+sneaker?.price * currentPrice).toLocaleString(
-                            "ru-RU",
-                            {
-                              style: "currency",
-                              currency: "RUB",
-                            }
-                          )}
-                        </Text>
-                      )}
-                    </View>
+                        )}
+                      </View>
 
-                    <View>
-                      <TouchableHighlight
-                        underlayColor={"#393939"}
-                        style={{
-                          ...styles.button,
-                          shadowOffset: { width: 0, height: 2 },
-                          shadowOpacity: 0.5,
-                          shadowRadius: 3,
-                          elevation: 5,
-                        }}
-                        onPress={() => {
-                          validationToAdd();
-                        }}
-                      >
-                        <View
-                          style={{ flexDirection: "row", alignItems: "center" }}
+                      <View>
+                        <TouchableHighlight
+                          underlayColor={"#393939"}
+                          style={{
+                            ...styles.button,
+                            shadowOffset: { width: 0, height: 2 },
+                            shadowOpacity: 0.5,
+                            shadowRadius: 3,
+                            elevation: 5,
+                          }}
+                          onPress={() => {
+                            validationToAdd();
+                          }}
                         >
-                          <Icon
-                            color={
-                              cartSneaker.items
-                                .map((item) => item.name)
-                                .includes(sneaker?.name)
-                                ? "lightgreen"
-                                : "white"
-                            }
-                            solid
-                            name="shopping-bag"
-                            size={20}
-                            style={{ marginRight: 15 }}
-                          />
-                          <Text
+                          <View
                             style={{
-                              color: cartSneaker.items
-                                .map((item) => item.name)
-                                .includes(sneaker?.name)
-                                ? "lightgreen"
-                                : "white",
-                              fontWeight: "bold",
-                              fontSize: 15,
+                              flexDirection: "row",
+                              alignItems: "center",
                             }}
                           >
-                            {cartSneaker.items
-                              .map((item) => item.size)
-                              .includes(sneaker?.name)
-                              ? "In cart"
-                              : "Add to cart"}
-                          </Text>
-                        </View>
-                      </TouchableHighlight>
+                            <Icon
+                              color={
+                                cartSneaker.items
+                                  .map((item) => item.name)
+                                  .includes(sneaker?.name)
+                                  ? "lightgreen"
+                                  : "white"
+                              }
+                              solid
+                              name="shopping-bag"
+                              size={20}
+                              style={{ marginRight: 15 }}
+                            />
+                            <Text
+                              style={{
+                                color: cartSneaker.items
+                                  .map((item) => item.name)
+                                  .includes(sneaker?.name)
+                                  ? "lightgreen"
+                                  : "white",
+                                fontWeight: "bold",
+                                fontSize: 15,
+                              }}
+                            >
+                              {cartSneaker.items
+                                .map((item) => item.size)
+                                .includes(sneaker?.name)
+                                ? "In cart"
+                                : "Add to cart"}
+                            </Text>
+                          </View>
+                        </TouchableHighlight>
+                      </View>
                     </View>
                   </View>
                 </View>
               </View>
             </View>
-          </View>
-        </TouchableOpacity>
+          </TouchableOpacity>
+        </ScrollView>
       </Modal>
     </View>
   );
