@@ -24,16 +24,8 @@ export default function TodayOffer({}) {
     [],
     data.map((item) => item)
   );
-  const lengthSneaker = flatArraySneaker.length;
   const lengthOffer = flatArrayOffer.length;
-  const randomIdxSneaker = Math.floor(Math.random() * lengthSneaker);
   const randomIdxOffer = Math.floor(Math.random() * lengthOffer);
-
-  // useFocusEffect(
-  //   React.useCallback(() => {
-  //     refetch();
-  //   }, [])
-  // );
 
   return (
     <View style={{ marginTop: 30 }}>
@@ -149,16 +141,16 @@ export default function TodayOffer({}) {
                       </Text>
                     </View>
 
-                    {item.sneaker.map((sneaker, idx) => (
-                      <View key={sneaker.id}>
-                        {idx === randomIdxSneaker && (
+                    {
+                      item.sneaker.map((sneaker, idx) => (
+                        <View key={sneaker.id}>
                           <Image
                             style={{ width: 160, height: 100 }}
                             source={{ uri: sneaker.image }}
                           />
-                        )}
-                      </View>
-                    ))}
+                        </View>
+                      ))[0]
+                    }
                   </View>
                 </TouchableOpacity>
               )}

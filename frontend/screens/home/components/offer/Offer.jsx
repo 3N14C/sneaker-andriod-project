@@ -7,7 +7,7 @@ export default function Offer() {
   const navigation = useNavigation();
   return (
     <View>
-      <TouchableHighlight >
+      <TouchableHighlight>
         <TodayOffer />
       </TouchableHighlight>
     </View>

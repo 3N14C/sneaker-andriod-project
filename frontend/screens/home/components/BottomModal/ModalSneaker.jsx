@@ -119,12 +119,13 @@ export const ModalSneaker = ({ modalVisible, closeBottomSheet }) => {
   };
 
   return (
-    <View showsVerticalScrollIndicator={false} style={{ flex: 1 }}>
+    <View showsVerticalScrollIndicator={false} style={{ flex: 1, zIndex: 111 }}>
       <Modal
         visible={modalVisible}
         transparent={true}
         animationType="slide"
         onRequestClose={closeBottomSheet}
+        style={{zIndex: 111}}
       >
         <ScrollView showsVerticalScrollIndicator={false}>
           <TouchableOpacity

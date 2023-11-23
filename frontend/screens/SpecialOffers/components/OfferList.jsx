@@ -20,7 +20,6 @@ export default function OfferList({ route }) {
 
   React.useEffect(() => {
     navigation.setOptions({
-      title: "Специальные предложения",
       headerTitle: data.day,
     });
   }, []);

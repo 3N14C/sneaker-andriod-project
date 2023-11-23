@@ -9,7 +9,7 @@ import {
 import React from "react";
 import { specialOffer } from "../../redux/specialOffer";
 import OfferItem from "./components/OfferItem";
-import { useFocusEffect } from "@react-navigation/native";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import OfferSkeleton from "../../skeleton/OfferSkeleton";
 
 export default function SpecialOffers({ navigation }) {
@@ -21,12 +21,15 @@ export default function SpecialOffers({ navigation }) {
 
   useFocusEffect(
     React.useCallback(() => {
+      navigation.setOptions({
+        headerTitle: 'Специальные предложения',
+      })
       refetch();
     }, [])
   );
 
   return (
-    <ScrollView showsVerticalScrollIndicator={false} style={{flex: 1, backgroundColor: 'white'}}>
+    <ScrollView showsVerticalScrollIndicator={false} style={{flex: 1, backgroundColor: 'white', marginBottom: 20}}>
       <View style={{ flex: 1, backgroundColor: "#fff", paddingHorizontal: 20 }}>
         {data.map((item, idx) => (
           <View key={item.id}>
