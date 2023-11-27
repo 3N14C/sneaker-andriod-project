@@ -28,7 +28,9 @@ const Payment = ({ navigation, userData }) => {
   const [createOrder] = order.useCreateOrderMutation();
 
   const dispatch = useDispatch();
+  // CARD
   const cardItem = useSelector(selectCardItem);
+  // CART
   const cartItem = useSelector(selectCartItems);
   const addressItem = useSelector(selectAddressItem);
   const currentPrice = useCurrentPrice();
@@ -147,18 +149,33 @@ const Payment = ({ navigation, userData }) => {
                   style={{ width: 50, height: 50 }}
                   source={require("../../public/mastercard.png")}
                 />
-                <Text
-                  style={{
-                    fontSize: 16,
-                    fontWeight: "bold",
-                    color: "rgb(34, 34, 34)",
-                  }}
-                >
-                  {card.numberCard
-                    .slice(-4)
-                    .padStart(16, "*")
-                    .replace(/(.{4})/g, "$1 ")}
-                </Text>
+                <View>
+                  <Text
+                    style={{
+                      fontSize: 16,
+                      fontWeight: "bold",
+                      color: "rgb(34, 34, 34)",
+                    }}
+                  >
+                    {card.numberCard
+                      .slice(-4)
+                      .padStart(16, "*")
+                      .replace(/(.{4})/g, "$1 ")}
+                  </Text>
+
+                  {isChecked !== false &&
+                    +cardItem.card[isChecked]?.balanceCard < +sum && (
+                      <Text
+                        style={{
+                          fontSize: 12,
+                          fontWeight: "bold",
+                          color: "#ff9095",
+                        }}
+                      >
+                        Не хватает средств на карте.
+                      </Text>
+                    )}
+                </View>
               </View>
 
               <TouchableOpacity
@@ -175,7 +192,7 @@ const Payment = ({ navigation, userData }) => {
         </View>
 
         <TouchableOpacity
-          onPress={(idx) => handleConfigmPayment(idx)}
+          onPress={() => handleConfigmPayment()}
           style={{
             ...styles.button,
           }}

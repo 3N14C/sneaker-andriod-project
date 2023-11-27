@@ -86,16 +86,18 @@ export default function Cart({route}) {
                   }}
                   style={{
                     position: "absolute",
-                    right: 20,
+                    right: -10,
                     top: 20,
                     zIndex: 22,
+                    width: 40,
+                    height: 40,
                   }}
                 />
                 <View style={{ ...styles.container_sneaker }}>
                   <Image
                     width={100}
                     style={{ paddingBottom: 100 }}
-                    source={{ uri: sneaker.image }}
+                    source={{ uri: sneaker.image[0].path }}
                   />
                 </View>
 
@@ -114,7 +116,7 @@ export default function Cart({route}) {
                           width: "90%",
                         }}
                       >
-                        {sneaker.name}
+                        {sneaker.name.length > 15 ? sneaker.name.slice(0, 15) + "..." : sneaker.name}
                       </Text>
                     </View>
 

@@ -1,5 +1,6 @@
 import { useNavigation, useRoute } from "@react-navigation/native";
 import {
+  Dimensions,
   Image,
   Modal,
   ScrollView,
@@ -17,6 +18,8 @@ import { selectCartItems } from "../../../../hooks/useSelector";
 import { addItemToCart } from "../../../../redux/cart/cart.slice";
 import { useToast } from "react-native-toast-notifications";
 import useCurrentPrice from "../../../../hooks/useCurrentPrice";
+import { Carousel } from "react-native-basic-carousel";
+
 export const ModalSneaker = ({ modalVisible, closeBottomSheet }) => {
   const [focus, setFocus] = React.useState(false);
   const currentPrice = useCurrentPrice();
@@ -29,6 +32,7 @@ export const ModalSneaker = ({ modalVisible, closeBottomSheet }) => {
   const route = useRoute();
   const navigation = useNavigation();
   const { sneaker } = route?.params;
+  const imagePath = sneaker?.image.map(image => image.path)
   const toast = useToast();
 
   const showToast = () => {
@@ -89,13 +93,6 @@ export const ModalSneaker = ({ modalVisible, closeBottomSheet }) => {
         setFocus(null);
         showToast();
         closeBottomSheet();
-      } else if (!modelSize[focus]) {
-        toast.show("Пожалуйста, выберите размер", {
-          type: "danger",
-          placement: "top",
-          duration: 1000,
-          animationType: "slide-in",
-        });
       } else if (
         !modelSize[focus]?.sneaker
           .map((sneaker) => sneaker?.name)
@@ -119,13 +116,12 @@ export const ModalSneaker = ({ modalVisible, closeBottomSheet }) => {
   };
 
   return (
-    <View showsVerticalScrollIndicator={false} style={{ flex: 1, zIndex: 111 }}>
+    <View showsVerticalScrollIndicator={false} style={{ flex: 1 }}>
       <Modal
         visible={modalVisible}
         transparent={true}
         animationType="slide"
         onRequestClose={closeBottomSheet}
-        style={{zIndex: 111}}
       >
         <ScrollView showsVerticalScrollIndicator={false}>
           <TouchableOpacity
@@ -150,14 +146,24 @@ export const ModalSneaker = ({ modalVisible, closeBottomSheet }) => {
                   size={30}
                 />
                 <View style={{ alignItems: "center" }}>
-                  <Image
-                    source={{ uri: sneaker?.image }}
-                    style={{
-                      width: "100%",
-                      height: 300,
-                      resizeMode: "cover",
-                      zIndex: 10,
-                    }}
+                  <Carousel
+                    data={imagePath}
+                    renderItem={({ item }) => (
+                      <Image
+                        source={{
+                          uri: item,
+                        }}
+                        style={{
+                          width: "100%",
+                          height: 300,
+                          resizeMode: "cover",
+                        }}
+                      />
+                    )}
+                    itemWidth={Dimensions.get("window").width}
+                    autoplay
+                    pagination
+                    autoplayDelay={1000}
                   />
                 </View>
 
@@ -195,7 +201,9 @@ export const ModalSneaker = ({ modalVisible, closeBottomSheet }) => {
                       <Text style={{ fontWeight: "bold", fontSize: 20 }}>
                         Описание
                       </Text>
-                      <Text>{sneaker?.description || "lorem"}</Text>
+                      <Text style={{ marginTop: 10 }}>
+                        {sneaker?.description || "lorem"}
+                      </Text>
                     </View>
 
                     <View
@@ -214,7 +222,7 @@ export const ModalSneaker = ({ modalVisible, closeBottomSheet }) => {
                         <View
                           style={{ flexDirection: "row", alignItems: "center" }}
                         >
-                          {sortedModelSize.map((size, idx) => {
+                          {modelSize.map((size, idx) => {
                             return (
                               <TouchableOpacity
                                 key={size.id}
@@ -259,6 +267,64 @@ export const ModalSneaker = ({ modalVisible, closeBottomSheet }) => {
                             );
                           })}
                         </View>
+                        {!modelSize[focus] ? (
+                          <Text
+                            style={{
+                              flex: 1,
+                              textAlign: "center",
+                              marginTop: 20,
+                              borderWidth: 1,
+                              borderColor: "#ff9095",
+                              alignItems: "center",
+                              justifyContent: "center",
+                              color: "#ff9095",
+                              padding: 10,
+                              borderRadius: 5,
+                            }}
+                          >
+                            Пожалуйста, выберите размер
+                          </Text>
+                        ) : !modelSize[focus]?.sneaker
+                            .map((sneaker) => sneaker?.name)
+                            .includes(sneaker?.name) ? (
+                          <Text
+                            style={{
+                              flex: 1,
+                              textAlign: "center",
+                              marginTop: 20,
+                              borderWidth: 1,
+                              borderColor: "#ff9095",
+                              alignItems: "center",
+                              justifyContent: "center",
+                              color: "#ff9095",
+                              padding: 10,
+                              borderRadius: 5,
+                            }}
+                          >
+                            На данный момент размера нет в наличии
+                          </Text>
+                        ) : (
+                          modelSize[focus]?.sneaker
+                            .map((sneaker) => sneaker?.name)
+                            .includes(sneaker?.name) && (
+                            <Text
+                              style={{
+                                flex: 1,
+                                textAlign: "center",
+                                marginTop: 20,
+                                borderWidth: 1,
+                                borderColor: "#1dff77",
+                                alignItems: "center",
+                                justifyContent: "center",
+                                color: "#1dff77",
+                                padding: 10,
+                                borderRadius: 5,
+                              }}
+                            >
+                              Размер есть в наличии
+                            </Text>
+                          )
+                        )}
                       </View>
                     </View>
 

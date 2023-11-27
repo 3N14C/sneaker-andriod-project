@@ -19,6 +19,7 @@ export default function FavouriteList() {
   };
 
   const favorites = useSelector(selectFavoriteProducts);
+  console.log(favorites.items)
   const dispatch = useDispatch();
   const navigation = useNavigation();
 
@@ -41,6 +42,23 @@ export default function FavouriteList() {
                   }}
                 >
                   <View style={styles.container_sneaker}>
+                    {new Date() - new Date(sneaker.createdAt) < 86400000 && (
+                      <Text
+                        style={{
+                          position: "absolute",
+                          zIndex: 80,
+                          color: "white",
+                          fontWeight: "bold",
+                          fontSize: 12,
+                          backgroundColor: "red",
+                          paddingHorizontal: 5,
+                          paddingVertical: 2,
+                          borderRadius: 5,
+                        }}
+                      >
+                        New!
+                      </Text>
+                    )}
                     <Icon
                       solid
                       style={{
@@ -63,10 +81,14 @@ export default function FavouriteList() {
                     />
                     <Image
                       style={{ width: 100, height: 100 }}
-                      source={{ uri: sneaker.image }}
+                      source={{ uri: sneaker.image[0].path }}
                     />
                   </View>
-                  <Text style={styles.sneakerName}>{sneaker.name}</Text>
+                  <Text style={styles.sneakerName}>
+                    {sneaker.name.length > 15
+                      ? sneaker.name.slice(0, 15) + "..."
+                      : sneaker.name}
+                  </Text>
                   <View
                     style={{
                       flexDirection: "row",

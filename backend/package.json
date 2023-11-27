@@ -30,6 +30,7 @@
 		"class-validator": "^0.14.0",
 		"global": "^4.4.0",
 		"jsbarcode": "^3.11.5",
+		"multer": "^1.4.5-lts.1",
 		"prisma": "^5.6.0",
 		"railway": "^2.0.17",
 		"reflect-metadata": "^0.1.13",

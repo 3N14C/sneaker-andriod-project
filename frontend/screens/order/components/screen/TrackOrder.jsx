@@ -89,7 +89,7 @@ const TrackOrder = ({ route }) => {
                 backgroundColor: "#f0f0f0",
                 borderRadius: 10,
               }}
-              source={{ uri: orderItem?.image }}
+              source={{ uri: orderItem?.image[0].path }}
             />
 
             <View
@@ -103,6 +103,7 @@ const TrackOrder = ({ route }) => {
                   fontWeight: "bold",
                   color: "#000",
                   marginVertical: 10,
+                  maxWidth: 150
                 }}
               >
                 {orderItem?.name}
@@ -118,7 +119,7 @@ const TrackOrder = ({ route }) => {
                     ...styles.sneakerSize,
                   }}
                 >
-                  {orderItem.size[0].name}
+                  {orderItem.sizeNumber}
                 </Text>
               </View>
 

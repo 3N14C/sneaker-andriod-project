@@ -157,7 +157,7 @@ export default function Checkout({ userData }) {
                 <Image
                   width={100}
                   style={{ paddingBottom: 100 }}
-                  source={{ uri: sneaker.image }}
+                  source={{ uri: sneaker.image[0].path }}
                 />
               </View>
 
@@ -173,7 +173,7 @@ export default function Checkout({ userData }) {
                         marginRight: 10,
                         fontWeight: "bold",
                         fontSize: 15,
-                        width: "90%",
+                        maxWidth: 150,
                       }}
                     >
                       {sneaker.name}

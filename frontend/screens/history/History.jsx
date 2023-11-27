@@ -48,7 +48,7 @@ const History = ({ route }) => {
                   borderRadius: 50,
                   backgroundColor: "#f4f4f4",
                 }}
-                source={{ uri: order?.sneaker?.image }}
+                source={{ uri: order?.sneaker?.image[0].path }}
               />
 
               <View

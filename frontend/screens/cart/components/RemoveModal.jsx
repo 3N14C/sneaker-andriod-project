@@ -97,7 +97,7 @@ export default function RemoveModal({ modalVisible, closeBottomSheet }) {
                     width: 100,
                     height: 100,
                   }}
-                  source={{ uri: sneaker?.image }}
+                  source={{ uri: sneaker?.image[0].path }}
                 />
 
                 <View style={{ marginLeft: 20 }}>

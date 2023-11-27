@@ -57,7 +57,7 @@ export default function SpecialOffers({ navigation }) {
                   image={item.sneaker
                     .map((sneaker, index) => {
                       if (index === 0) {
-                        return sneaker.image;
+                        return sneaker.image[0].path;
                       }
                     })
                     .join("")}

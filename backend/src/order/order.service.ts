@@ -1,3 +1,4 @@
+import { SneakersService } from './../sneakers/sneakers.service'
 import JsBarcode from 'jsbarcode'
 import { Injectable } from '@nestjs/common'
 import { PrismaService } from 'src/prisma.service'
@@ -5,7 +6,10 @@ import { OrderDto } from './dto/order.dto'
 
 @Injectable()
 export class OrderService {
-	constructor(private prisma: PrismaService) {}
+	constructor(
+		private prisma: PrismaService,
+		private sneakerService: SneakersService
+	) {}
 
 	async create(dto: OrderDto) {
 		const order = await this.prisma.order.create({
@@ -21,18 +25,14 @@ export class OrderService {
 			},
 
 			include: {
-				sneaker: {
-					include: {
-						size: true
-					}
-				}
+				sneaker: true
 			}
 		})
 
 		if (order) {
-			const updateSneaker = await this.prisma.sneaker.update({
+			const updateSneaker = await this.prisma.sneaker.updateMany({
 				where: {
-					id: order.sneakerId
+					name: order.sneaker.name
 				},
 				data: {
 					soldCount: {
@@ -40,6 +40,8 @@ export class OrderService {
 					}
 				}
 			})
+
+			await this.sneakerService.removeSizeFromSneaker(order.sneakerId)
 
 			return updateSneaker
 		}
@@ -51,11 +53,7 @@ export class OrderService {
 		const orders = await this.prisma.order.findMany({
 			include: {
 				user: true,
-				sneaker: {
-					include: {
-						size: true
-					}
-				}
+				sneaker: true
 			}
 		})
 
@@ -69,11 +67,7 @@ export class OrderService {
 			},
 
 			include: {
-				sneaker: {
-					include: {
-						size: true
-					}
-				}
+				sneaker: true
 			}
 		})
 
@@ -88,11 +82,7 @@ export class OrderService {
 
 			include: {
 				user: true,
-				sneaker: {
-					include: {
-						size: true
-					}
-				}
+				sneaker: true
 			}
 		})
 

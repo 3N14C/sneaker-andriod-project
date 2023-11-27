@@ -33,7 +33,7 @@ export class SneakersController {
 	)
 	create(@UploadedFiles() files, @Body() dto: SneakersDto) {
 		const { image } = files
-		return this.sneakersService.create(dto, image[0])
+		return this.sneakersService.create(dto, image)
 	}
 
 	@Get()
@@ -61,7 +61,7 @@ export class SneakersController {
 		])
 	)
 	updateFileds(
-		@Param('id') id: string,
+		@Param('update/:id') id: string,
 		@Body() dto: SneakersDto,
 		@UploadedFiles() files?
 	) {
@@ -73,5 +73,12 @@ export class SneakersController {
 
 		// const { image } = files
 		return this.sneakersService.updateFields(id, dto, imagePath)
+	}
+
+	
+
+	@Patch('update/size/:id')
+	removeSizeFromSneaker(@Param('id') id: string, @Body() dto: SneakersDto) {
+		return this.sneakersService.removeSizeFromSneaker(id)
 	}
 }

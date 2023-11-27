@@ -55,12 +55,14 @@ model Sneaker {
   name        String
   brandName   String?
   price       String
-  offer       Offer?  @relation(fields: [offerPrice], references: [discount])
+  offer       Offer?   @relation(fields: [offerPrice], references: [discount])
   offerPrice  String?
-  rating      String  @default("1.0")
-  soldCount   Int     @default(0)
-  image       String
+  rating      String   @default("1.0")
+  soldCount   Int      @default(0)
+  image       Json[]
   description String?
+  sizeNumber  String
+  createdAt   DateTime @default(now())
 
   brand       Brand?        @relation(fields: [brandName], references: [name])
   size        Size[]

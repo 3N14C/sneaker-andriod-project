@@ -7,7 +7,7 @@ import {
   View,
 } from "react-native";
 import React, { useEffect } from "react";
-import { useFocusEffect, useNavigation } from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
 import { ModalSneaker } from "../home/components/BottomModal/ModalSneaker";
 import { useDispatch, useSelector } from "react-redux";
 import { addToFavorites } from "../../redux/favourite/favourite.slice";
@@ -17,15 +17,13 @@ import useCurrentPrice from "../../hooks/useCurrentPrice";
 
 export default function Category({ route }) {
   const [modalVisible, setModalVisible] = React.useState(false);
-  const currentPrice = useCurrentPrice()
+  const currentPrice = useCurrentPrice();
 
   const { brand } = route.params;
   const navigation = useNavigation();
 
-
   const dispatch = useDispatch();
   const favorites = useSelector(selectFavoriteProducts);
-
 
   const openBottomSheet = () => {
     setModalVisible(true);
@@ -73,6 +71,23 @@ export default function Category({ route }) {
                   marginBottom: 30,
                 }}
               >
+                {new Date() - new Date(item.createdAt) < 86400000 && (
+                  <Text
+                    style={{
+                      position: "absolute",
+                      zIndex: 80,
+                      color: "white",
+                      fontWeight: "bold",
+                      fontSize: 12,
+                      backgroundColor: "red",
+                      paddingHorizontal: 5,
+                      paddingVertical: 2,
+                      borderRadius: 5,
+                    }}
+                  >
+                    New!
+                  </Text>
+                )}
                 <View style={styles.container_sneaker}>
                   <Icon
                     solid
@@ -90,7 +105,7 @@ export default function Category({ route }) {
                       textAlign: "center",
                       position: "absolute",
                       right: 10,
-                      zIndex: 20
+                      zIndex: 20,
                     }}
                     name="heart"
                     size={15}
@@ -100,7 +115,7 @@ export default function Category({ route }) {
                   />
                   <Image
                     style={{ width: 100, height: 100, zIndex: 10 }}
-                    source={{ uri: item.image }}
+                    source={{ uri: item.image[0].path }}
                   />
                 </View>
                 <Text style={styles.sneakerName}>
@@ -135,10 +150,13 @@ export default function Category({ route }) {
                         style: "currency",
                         currency: "RUB",
                       })
-                    : parseFloat(+item.price * currentPrice).toLocaleString("ru-RU", {
-                        style: "currency",
-                        currency: "RUB",
-                      })}
+                    : parseFloat(+item.price * currentPrice).toLocaleString(
+                        "ru-RU",
+                        {
+                          style: "currency",
+                          currency: "RUB",
+                        }
+                      )}
                 </Text>
               </View>
             </TouchableOpacity>

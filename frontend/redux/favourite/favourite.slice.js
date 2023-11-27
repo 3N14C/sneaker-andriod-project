@@ -22,7 +22,8 @@ export const favoritesSlice = createSlice({
           image: newItem.image,
           size: newItem.size,
           rating: newItem.rating,
-          soldCount: newItem.soldCount
+          soldCount: newItem.soldCount,
+          createdAt: newItem.createdAt
         })
       } else {
         const index = state.items.findIndex(item => item.id === action.payload.id)

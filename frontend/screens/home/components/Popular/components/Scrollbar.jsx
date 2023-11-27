@@ -168,7 +168,7 @@ export default function Scrollbar() {
                                     />
                                     <Image
                                       style={{ width: 100, height: 100, zIndex: 10 }}
-                                      source={{ uri: sneaker.image }}
+                                      source={{ uri: sneaker.image[0].path }}
                                     />
                                   </View>
                                   <Text style={{ ...styles.sneakerName }}>

@@ -8,13 +8,13 @@ import { PersistGate } from "redux-persist/integration/react";
 
 export default function App() {
   return (
-    <ToastProvider style={{ zIndex: 9999 }}>
-      <Provider store={store}>
-        <PersistGate loading={null} persistor={persistor}>
+    <Provider store={store}>
+      <PersistGate loading={null} persistor={persistor}>
+        <ToastProvider>
           <ReactNativeRouter />
-        </PersistGate>
-      </Provider>
-    </ToastProvider>
+        </ToastProvider>
+      </PersistGate>
+    </Provider>
   );
 }
 

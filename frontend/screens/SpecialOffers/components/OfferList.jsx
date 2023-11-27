@@ -13,6 +13,13 @@ export default function OfferList({ route }) {
   const currentPrice = useCurrentPrice();
 
   const { data } = route.params;
+  const uniqueData = data?.sneaker.reduce((acc, obj) => {
+    const found = acc.find((item) => item.name === obj.name);
+    if (!found) {
+      acc.push(obj);
+    }
+    return acc;
+  }, [])
   const navigation = useNavigation();
 
   const favorites = useSelector(selectFavoriteProducts);
@@ -34,7 +41,7 @@ export default function OfferList({ route }) {
 
   return (
     <View style={styles.container}>
-        {data.sneaker.map((sneaker, index) => {
+        {uniqueData.map((sneaker, index) => {
           return (
             <View key={sneaker.id}>
               <TouchableOpacity
@@ -56,6 +63,23 @@ export default function OfferList({ route }) {
                       modalVisible={modalVisible}
                       closeBottomSheet={closeBottomSheet}
                     />
+                    {new Date() - new Date(sneaker.createdAt) < 86400000 && (
+                      <Text
+                        style={{
+                          position: "absolute",
+                          zIndex: 80,
+                          color: "white",
+                          fontWeight: "bold",
+                          fontSize: 12,
+                          backgroundColor: "red",
+                          paddingHorizontal: 5,
+                          paddingVertical: 2,
+                          borderRadius: 5,
+                        }}
+                      >
+                        New!
+                      </Text>
+                    )}
                     <Icon
                       solid
                       style={{
@@ -67,6 +91,7 @@ export default function OfferList({ route }) {
                         paddingHorizontal: 2,
                         paddingVertical: 10,
                         width: 40,
+                        height: 40,
                         borderRadius: 50,
                         textAlign: "center",
                         position: "absolute",
@@ -80,11 +105,11 @@ export default function OfferList({ route }) {
                     />
                     <Image
                       style={{ width: 100, height: 100 }}
-                      source={{ uri: sneaker.image }}
+                      source={{ uri: sneaker.image[0].path }}
                     />
                   </View>
                   <Text style={styles.sneakerName}>
-                    {sneaker.name.length >= 20
+                    {sneaker.name.length >= 15
                       ? `${sneaker.name.slice(0, 15)}...`
                       : sneaker.name}
                   </Text>
@@ -113,7 +138,11 @@ export default function OfferList({ route }) {
                   <Text style={{ ...styles.sneakerPrice }}>
                     {sneaker?.offerPrice ? (
                       <View
-                        style={{ flexDirection: "row", alignItems: "center" }}
+                        style={{
+                          flexDirection: "row",
+                          alignItems: "center",
+                          position: "relative",
+                        }}
                       >
                         <Text
                           style={{
@@ -122,9 +151,14 @@ export default function OfferList({ route }) {
                             marginRight: 10,
                             textDecorationLine: "line-through",
                             color: "#ccc",
+                            position: "absolute",
+                            // left: -100,
+                            top: -15,
                           }}
                         >
-                          {parseFloat(+sneaker?.price * currentPrice).toLocaleString("ru-RU", {
+                          {parseFloat(
+                            +sneaker?.price * currentPrice
+                          ).toLocaleString("ru-RU", {
                             style: "currency",
                             currency: "RUB",
                           })}
@@ -132,7 +166,10 @@ export default function OfferList({ route }) {
 
                         <Text style={{ ...styles.sneakerPrice }}>
                           {parseFloat(
-                            (+sneaker?.price * currentPrice * +sneaker?.offerPrice) / 100
+                            (+sneaker?.price *
+                              currentPrice *
+                              +sneaker?.offerPrice) /
+                              100
                           ).toLocaleString("ru-RU", {
                             style: "currency",
                             currency: "RUB",
@@ -141,7 +178,9 @@ export default function OfferList({ route }) {
                       </View>
                     ) : (
                       <Text style={{ ...styles.sneakerPrice }}>
-                        {parseFloat(+sneaker?.price * currentPrice).toLocaleString("ru-RU", {
+                        {parseFloat(
+                          +sneaker?.price * currentPrice
+                        ).toLocaleString("ru-RU", {
                           style: "currency",
                           currency: "RUB",
                         })}
@@ -193,7 +232,7 @@ const styles = StyleSheet.create({
     color: "#101010",
     fontSize: 17,
     fontWeight: "bold",
-    marginTop: 5,
+    marginTop: 10,
   },
 
   container_sneaker: {

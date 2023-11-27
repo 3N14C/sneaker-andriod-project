@@ -59,7 +59,7 @@ export default function Order({ navigation }) {
                           >
                             <Image
                               style={{ width: 100, height: 100 }}
-                              source={{ uri: order.sneaker.image }}
+                              source={{ uri: order.sneaker.image[0].path }}
                             />
                           </View>
 
@@ -68,6 +68,7 @@ export default function Order({ navigation }) {
                               style={{
                                 fontSize: 14,
                                 fontWeight: "bold",
+                                maxWidth: 150
                               }}
                             >
                               {order.sneaker.name}
@@ -86,7 +87,7 @@ export default function Order({ navigation }) {
                                   ...styles.sneakerSize,
                                 }}
                               >
-                                {order.sneaker.size[0].name}
+                                {order.sneaker.sizeNumber}
                               </Text>
 
                               <Text
@@ -223,7 +224,7 @@ export default function Order({ navigation }) {
                           >
                             <Image
                               style={{ width: 100, height: 100 }}
-                              source={{ uri: order.sneaker.image }}
+                              source={{ uri: order.sneaker.image[0].path }}
                             />
                           </View>
 

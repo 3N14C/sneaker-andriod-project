@@ -10,6 +10,7 @@ import { goodsApi } from "../../redux/goodsApi";
 import InputLoginFields from "./components/InputLoginFields";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { favoritesSlice } from "../../redux/favourite/favourite.slice";
+import { useFocusEffect } from "@react-navigation/native";
 
 export default function Login({ navigation }) {
   const fadeAnim = React.useRef(new Animated.Value(0)).current;
@@ -17,6 +18,7 @@ export default function Login({ navigation }) {
 
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
+  const {data: allUsers = [], refetch} = goodsApi.useGetUsersQuery()
 
   const [loginUser, { isLoading }] = goodsApi.useLoginUserMutation(
     email,
@@ -31,6 +33,12 @@ export default function Login({ navigation }) {
       useNativeDriver: true,
     }).start();
   }, [fadeAnim]);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      refetch()
+    })
+  )
 
   React.useEffect(() => {
     getData();

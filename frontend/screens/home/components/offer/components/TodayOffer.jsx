@@ -146,7 +146,7 @@ export default function TodayOffer({}) {
                         <View key={sneaker.id}>
                           <Image
                             style={{ width: 160, height: 100 }}
-                            source={{ uri: sneaker.image }}
+                            source={{ uri: sneaker.image[0].path }}
                           />
                         </View>
                       ))[0]

@@ -8,12 +8,11 @@ import { OrderService } from 'src/order/order.service'
 export class SneakersService {
 	constructor(
 		private prisma: PrismaService,
-		private fileService: FileService,
-		private orderService: OrderService
+		private fileService: FileService
 	) {}
 
 	async create(dto: SneakersDto, files) {
-		const imagePath = this.fileService.createFile(FileType.SNEAKERS, files)
+		const imagePath = this.fileService.createMoreFiles(FileType.SNEAKERS, files)
 		const sneakers = await this.prisma.sneaker.create({
 			data: {
 				name: dto.name,
@@ -21,8 +20,10 @@ export class SneakersService {
 				offerPrice: dto.offerPrice,
 				price: dto.price,
 				description: dto.description,
-				image: imagePath,
-
+				image: {
+					set: await imagePath
+				},
+				sizeNumber: dto.sizeNumber,
 				size: {
 					connect: {
 						name: dto.sizeNumber
@@ -84,12 +85,11 @@ export class SneakersService {
 	async updateFields(id: string, dto: SneakersDto, files) {
 		const sneakers = await this.prisma.sneaker.update({
 			where: {
-				id
+				id: id
 			},
 
 			data: {
 				...dto,
-				// soldCount: +dto.soldCount,
 				image: files ? files : null
 			}
 		})
@@ -97,6 +97,47 @@ export class SneakersService {
 		return {
 			...sneakers,
 			message: 'Sneakers updated'
+		}
+	}
+
+	async addImageToSneaker(sneakerId: string, files) {
+		// const imagePath = this.fileService.createMoreFiles(FileType.SNEAKERS, files)
+
+		const sneakers = await this.prisma.sneaker.update({
+			where: {
+				id: sneakerId
+			},
+
+			data: {
+				image: {
+					push: {
+						// path: await imagePath
+					}
+				}
+			}
+		})
+
+		return {
+			...sneakers,
+			message: 'Image added to sneaker'
+		}
+	}
+
+	async removeSizeFromSneaker(sneakerId: string) {
+		const size = await this.prisma.sneaker.update({
+			where: {
+				id: sneakerId
+			},
+			data: {
+				size: {
+					set: []
+				}
+			}
+		})
+
+		return {
+			...size,
+			message: 'Size removed from sneaker'
 		}
 	}
 }
