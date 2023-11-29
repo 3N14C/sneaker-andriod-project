@@ -20,25 +20,34 @@ const AddCard = ({ navigation }) => {
   const [name, setName] = React.useState("");
   const [number, setNumber] = React.useState("");
   const [date, setDate] = React.useState("");
+  const [dateValid, setDateValid] = React.useState(true)
+  const datePattern = /^(0[1-9]|1[0-2])\/\d{2}$/;
   const [cvv, setCvv] = React.useState("");
 
   const dispatch = useDispatch();
   const cardItem = useSelector(selectCardItem);
 
   const handleAddCard = () => {
+    
+
     if (name && number && date && cvv) {
-      dispatch(
-        addCard({
-          nameCard: name.toUpperCase(),
-          numberCard: number,
-          dateCard: date,
-          cvvCard: cvv,
-        })
-      );
-      setName("");
-      setNumber("");
-      setDate("");
-      setCvv("");
+      if (datePattern.test(date)) {
+        dispatch(
+          addCard({
+            nameCard: name.toUpperCase(),
+            numberCard: number,
+            dateCard: date,
+            cvvCard: cvv,
+          })
+        );
+        setName("");
+        setNumber("");
+        setDate("");
+        setCvv("");
+        setDateValid(true)
+      } else {
+        setDateValid(false)
+      }
     }
   };
 
@@ -151,7 +160,7 @@ const AddCard = ({ navigation }) => {
                     }}
                   >
                     {number.length > 0 ? (
-                      number.replace(/(\d{4})(?=\d)/g, "$1 ")
+                      number
                     ) : (
                       <Text>---- ---- ---- ----</Text>
                     )}
@@ -210,7 +219,7 @@ const AddCard = ({ navigation }) => {
 
         <View
           style={{
-            paddingVertical: 40,
+            paddingTop: 40,
           }}
         >
           <View>
@@ -345,26 +354,46 @@ const AddCard = ({ navigation }) => {
           </View>
         </View>
 
-        <TouchableHighlight
-          onPress={() => {
-            handleAddCard();
-          }}
-          style={{
-            ...styles.button,
-          }}
-        >
-          <Text
+        <View>
+          {!dateValid && (
+            <Text
+              style={{
+                color: "red",
+                maxWidth: 200,
+                borderWidth: 1,
+                borderColor: "#ff9095",
+                alignItems: "center",
+                justifyContent: "center",
+                color: "#ff9095",
+                padding: 10,
+                borderRadius: 5,
+                marginTop: 10,
+              }}
+            >
+              Формат даты не соответствует формату MM/YY
+            </Text>
+          )}
+          <TouchableHighlight
+            onPress={() => {
+              handleAddCard();
+            }}
             style={{
-              color: "rgb(246, 246, 246)",
-              fontSize: 20,
-              fontWeight: "bold",
-              textAlign: "center",
-              paddingVertical: 10,
+              ...styles.button,
             }}
           >
-            Добавить
-          </Text>
-        </TouchableHighlight>
+            <Text
+              style={{
+                color: "rgb(246, 246, 246)",
+                fontSize: 20,
+                fontWeight: "bold",
+                textAlign: "center",
+                paddingVertical: 10,
+              }}
+            >
+              Добавить
+            </Text>
+          </TouchableHighlight>
+        </View>
       </View>
     </ScrollView>
   );

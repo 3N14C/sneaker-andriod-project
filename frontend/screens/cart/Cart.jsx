@@ -16,7 +16,9 @@ import useCurrentPrice from "../../hooks/useCurrentPrice";
 import { Toast } from "react-native-toast-notifications";
 
 export default function Cart({route}) {
-  const {data} = route?.params
+  const {data} = React.useMemo(() => {
+    return route?.params;
+  }, [route?.params]);
   const [modalVisible, setModalVisible] = React.useState(false);
   const currentPrice = useCurrentPrice();
 
@@ -30,14 +32,16 @@ export default function Cart({route}) {
     setModalVisible(true);
   };
 
-  const sum = cartItem.items.reduce((acc, item) => {
-    return (
-      acc +
-      (+item.offerPrice
-        ? ((+item.totalPrice * +item.offerPrice) / 100) * currentPrice
-        : +item.totalPrice * currentPrice)
-    );
-  }, 0);
+  const sum = React.useMemo(() => {
+    return cartItem.items.reduce((acc, item) => {
+      return (
+        acc +
+        (+item.offerPrice
+          ? ((+item.totalPrice * +item.offerPrice) / 100) * currentPrice
+          : +item.totalPrice * currentPrice)
+      );
+    }, 0);
+  }, [cartItem.items, currentPrice]);
 
   const handleAddToOrder = () => {
     if (cartItem?.items.length > 0) {

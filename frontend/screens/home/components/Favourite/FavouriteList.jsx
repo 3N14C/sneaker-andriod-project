@@ -19,7 +19,6 @@ export default function FavouriteList() {
   };
 
   const favorites = useSelector(selectFavoriteProducts);
-  console.log(favorites.items)
   const dispatch = useDispatch();
   const navigation = useNavigation();
 
@@ -97,14 +96,13 @@ export default function FavouriteList() {
                     }}
                   >
                     <Icon
-                      style={{ color: "#101010", width: 10, height: 10 }}
                       solid
+                      color={"black"}
+                      style={{ color: "#101010" }}
                       name="star"
                       size={14}
                     />
-                    <Text style={{ ...styles.rating }}>
-                      {sneaker.rating} |{" "}
-                    </Text>
+                    <Text style={{ ...styles.rating }}>{sneaker.rating} | </Text>
                     <Text style={{ ...styles.soldCount }}>
                       {sneaker.soldCount} продано
                     </Text>

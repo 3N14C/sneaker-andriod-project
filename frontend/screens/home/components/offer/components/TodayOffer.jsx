@@ -16,13 +16,19 @@ export default function TodayOffer({}) {
     data = [],
   } = specialOffer.useGetAllSpecialOfferQuery();
 
-  const flatArraySneaker = Array.prototype.concat.apply(
-    [],
-    data.map((item) => item.sneaker)
-  );
-  const flatArrayOffer = Array.prototype.concat.apply(
-    [],
-    data.map((item) => item)
+  React.useEffect(() => {
+    if (data) {
+      refetch();
+    }
+  }, [data]);
+
+  const flatArrayOffer = React.useMemo(
+    () =>
+      Array.prototype.concat.apply(
+        [],
+        data.map((item) => item)
+      ),
+    [data]
   );
   const lengthOffer = flatArrayOffer.length;
   const randomIdxOffer = Math.floor(Math.random() * lengthOffer);

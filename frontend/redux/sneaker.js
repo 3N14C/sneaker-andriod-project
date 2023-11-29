@@ -10,7 +10,7 @@ export const sneaker = createApi({
     }),
     endpoints: (build) => ({
         getAll: build.query({
-            query: () => '/sneaker',
+            query: () => '/sneakers',
         }),
 
         createSneaker: build.mutation({

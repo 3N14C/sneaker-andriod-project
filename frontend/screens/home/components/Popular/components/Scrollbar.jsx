@@ -24,7 +24,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function Scrollbar() {
   const [modalVisible, setModalVisible] = React.useState(false);
-  const [focus, setFocus] = React.useState(null || "All");
+  const [focus, setFocus] = React.useState(null || "Все");
 
   const currentPrice = useCurrentPrice();
 
@@ -53,28 +53,28 @@ export default function Scrollbar() {
     }
   };
 
-  useFocusEffect(
-    React.useCallback(() => {
-      refetch();
-    }, [ focus ])
-  );
+  React.useEffect(() => {
+   if (data) {
+    refetch()
+   } 
+  }, [data])
 
   return (
     <View style={styles.container}>
       <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
         <View style={styles.scrollbar}>
           <Text
-            onPress={() => setFocus("All")}
+            onPress={() => setFocus("Все")}
             style={{
-              color: focus === "All" ? "white" : "black",
-              backgroundColor: focus === "All" ? "black" : "white",
+              color: focus === "Все" ? "white" : "black",
+              backgroundColor: focus === "Все" ? "black" : "white",
               ...styles.scrollbar_item,
               marginRight: 15,
               textAlign: "center",
               alignItems: "center",
             }}
           >
-            All
+            Все
           </Text>
           {data.map((item, idx) => (
             <TouchableHighlight
@@ -122,10 +122,7 @@ export default function Scrollbar() {
                   return (
                     <View key={item.id} style={{ ...styles.container_item }}>
                       {item.sneaker.map((sneaker, idx) => {
-                        if (
-                          sneaker.soldCount > 6000 &&
-                          sneaker.rating > "4.0"
-                        )
+                        if (sneaker.soldCount > 6000 && sneaker.rating > "4.0")
                           return (
                             <View key={sneaker.id}>
                               <TouchableOpacity
@@ -158,7 +155,7 @@ export default function Scrollbar() {
                                         textAlign: "center",
                                         position: "absolute",
                                         right: 10,
-                                        zIndex: 20
+                                        zIndex: 20,
                                       }}
                                       name="heart"
                                       size={15}
@@ -167,7 +164,11 @@ export default function Scrollbar() {
                                       }}
                                     />
                                     <Image
-                                      style={{ width: 100, height: 100, zIndex: 10 }}
+                                      style={{
+                                        width: 100,
+                                        height: 100,
+                                        zIndex: 10,
+                                      }}
                                       source={{ uri: sneaker.image[0].path }}
                                     />
                                   </View>
@@ -226,10 +227,7 @@ export default function Scrollbar() {
                   return (
                     <View key={item.id} style={{ ...styles.container_item }}>
                       {item.sneaker.map((sneaker, idx) => {
-                        if (
-                          sneaker.soldCount > 6000 &&
-                          sneaker.rating > "4.0"
-                        )
+                        if (sneaker.soldCount > 6000 && sneaker.rating > "4.0")
                           return (
                             <View key={sneaker.id}>
                               <TouchableOpacity

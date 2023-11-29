@@ -19,14 +19,14 @@ export default function SpecialOffers({ navigation }) {
     refetch,
   } = specialOffer.useGetAllSpecialOfferQuery();
 
-  useFocusEffect(
-    React.useCallback(() => {
-      navigation.setOptions({
-        headerTitle: 'Специальные предложения',
-      })
+  React.useEffect(() => {
+    navigation.setOptions({
+      headerTitle: "Специальные предложения",
+    })
+    if (data) {
       refetch();
-    }, [])
-  );
+    }
+  }, [data]);
 
   return (
     <ScrollView showsVerticalScrollIndicator={false} style={{flex: 1, backgroundColor: 'white', marginBottom: 20}}>

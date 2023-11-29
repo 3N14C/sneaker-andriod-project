@@ -22,6 +22,8 @@ export default function UserRouter({ params }) {
           tabBarStyle: { height: 50, borderTopWidth: 0 },
           tabBarLabelPosition: "below-icon",
           tabBarActiveTintColor: "black",
+          tabBarHideOnKeyboard: true,
+          freezeOnBlur: true
         }}
       >
         <Tab.Screen

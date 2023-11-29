@@ -25,22 +25,31 @@ export const ModalSneaker = ({ modalVisible, closeBottomSheet }) => {
   const currentPrice = useCurrentPrice();
 
   const { data: modelSize = [], refetch } = sizeSneaker.useGetSizesQuery();
-  const sortedModelSize = [...modelSize].sort((a, b) => a.name - b.name);
+  // const sortedModelSize = [...modelSize].sort((a, b) => a.name - b.name);
 
   const cartSneaker = useSelector(selectCartItems);
   const dispatch = useDispatch();
   const route = useRoute();
   const navigation = useNavigation();
-  const { sneaker } = route?.params;
-  const imagePath = sneaker?.image.map(image => image.path)
+  const { sneaker } = React.useMemo(() => {
+    return route?.params;
+  }, [route?.params]);
+
+  const imagePath = React.useMemo(() => {
+    if (sneaker && sneaker?.image) {
+      return sneaker?.image.map((image) => image.path);
+    }
+    return [];
+  }, [sneaker]);
+
   const toast = useToast();
 
   const showToast = () => {
     toast.show(
       `${
         cartSneaker.items.map((item) => item).includes(sneaker)
-          ? "Товар уже добавлен. Нажмите, чтобы перейти в корзину"
-          : "Добавлено в корзину"
+          ? "Добавлено в Корзину"
+          : "Добавлено в Корзину"
       }`,
       {
         type: `custom`,
@@ -93,17 +102,6 @@ export const ModalSneaker = ({ modalVisible, closeBottomSheet }) => {
         setFocus(null);
         showToast();
         closeBottomSheet();
-      } else if (
-        !modelSize[focus]?.sneaker
-          .map((sneaker) => sneaker?.name)
-          .includes(sneaker?.name)
-      ) {
-        toast.show("Размер на данный момент не доступен", {
-          type: "danger",
-          placement: "top",
-          duration: 1000,
-          animationType: "slide-in",
-        });
       }
     } catch (error) {
       toast.show(error, {
@@ -176,7 +174,11 @@ export const ModalSneaker = ({ modalVisible, closeBottomSheet }) => {
                     </Text>
 
                     <View
-                      style={{ flexDirection: "row", alignItems: "center" }}
+                      style={{
+                        flexDirection: "row",
+                        alignItems: "center",
+                        gap: 5,
+                      }}
                     >
                       <Icon
                         style={{ color: "#101010" }}

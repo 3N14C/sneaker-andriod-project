@@ -52,7 +52,9 @@ const OrderStatus = ({ iconName, rotateDeg, line, color }) => {
 
 const TrackOrder = ({ route }) => {
   const { orderItem } = route?.params;
+
   const { order } = route?.params;
+
   const currentPrice = useCurrentPrice();
 
   return (
@@ -103,7 +105,7 @@ const TrackOrder = ({ route }) => {
                   fontWeight: "bold",
                   color: "#000",
                   marginVertical: 10,
-                  maxWidth: 150
+                  maxWidth: 150,
                 }}
               >
                 {orderItem?.name}
@@ -244,7 +246,7 @@ const TrackOrder = ({ route }) => {
             }}
           >
             {order.roadmapDelivery.map((road, idx) => (
-              <View style={{  }} key={idx}>
+              <View style={{}} key={idx}>
                 <View style={{ flexDirection: "row", gap: 20 }}>
                   <View>
                     <View style={{ ...styles.containerPoint }}>
@@ -277,7 +279,7 @@ const TrackOrder = ({ route }) => {
                           fontWeight: "bold",
                           color: "#000",
                           fontSize: 16,
-                          maxWidth: road?.status.length > 20 ? 250 : 'auto' ,
+                          maxWidth: road?.status.length > 20 ? 250 : "auto",
                         }}
                       >
                         {`${road.status} - ${new Date(road.date).toLocaleString(
@@ -298,7 +300,7 @@ const TrackOrder = ({ route }) => {
                       style={{
                         color: "#aaaaaa",
                         fontSize: 12,
-                        marginTop: 3
+                        marginTop: 3,
                       }}
                     >
                       {new Date(road.date).toLocaleString("default", {

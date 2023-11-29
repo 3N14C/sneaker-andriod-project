@@ -3,7 +3,9 @@ import {
   StatusBar,
   StyleSheet,
   Text,
+  TextInput,
   TouchableHighlight,
+  TouchableOpacity,
   View,
 } from "react-native";
 import React from "react";
@@ -12,9 +14,13 @@ import Brand from "./components/Brand/Brand";
 import Offer from "./components/offer/Offer";
 import Popular from "./components/Popular/Popular";
 import HomeAdmin from "../../admin/screens/home/HomeAdmin";
+import Search from "../../componetns/Search.component";
+import { sneaker } from "../../redux/sneaker";
+import { brand } from "../../redux/brand";
 
 export default function Home({ route, navigation }) {
   const { data } = route?.params;
+  const {data: sneakerData = []} = sneaker.useGetAllQuery()
 
   return (
     <ScrollView style={{ flex: 1 }}>
@@ -27,8 +33,11 @@ export default function Home({ route, navigation }) {
               role={data.role}
             />
 
+            <Search getSneakerData={sneakerData} />
+
             <View style={styles.offer}>
               <Text style={styles.title}>Специальные предложения</Text>
+
               <TouchableHighlight
                 underlayColor={"transparent"}
                 onPress={() => navigation.navigate("Special Offers")}
@@ -105,9 +114,11 @@ const styles = StyleSheet.create({
   },
 
   offer: {
-    marginTop: 40,
+    marginTop: 20,
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
   },
+
+  
 });
