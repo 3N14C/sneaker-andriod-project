@@ -23,6 +23,7 @@ import { Carousel } from "react-native-basic-carousel";
 export const ModalSneaker = ({ modalVisible, closeBottomSheet }) => {
   const [focus, setFocus] = React.useState(false);
   const currentPrice = useCurrentPrice();
+  let fdsf;
 
   const { data: modelSize = [], refetch } = sizeSneaker.useGetSizesQuery();
   // const sortedModelSize = [...modelSize].sort((a, b) => a.name - b.name);
@@ -114,7 +115,7 @@ export const ModalSneaker = ({ modalVisible, closeBottomSheet }) => {
   };
 
   return (
-    <View showsVerticalScrollIndicator={false} style={{ flex: 1 }}>
+    <View style={{ flex: 1 }}>
       <Modal
         visible={modalVisible}
         transparent={true}
@@ -315,10 +316,10 @@ export const ModalSneaker = ({ modalVisible, closeBottomSheet }) => {
                                 textAlign: "center",
                                 marginTop: 20,
                                 borderWidth: 1,
-                                borderColor: "#1dff77",
+                                borderColor: "#44aa44",
                                 alignItems: "center",
                                 justifyContent: "center",
-                                color: "#1dff77",
+                                color: "#44aa44",
                                 padding: 10,
                                 borderRadius: 5,
                               }}
@@ -405,13 +406,7 @@ export const ModalSneaker = ({ modalVisible, closeBottomSheet }) => {
                             }}
                           >
                             <Icon
-                              color={
-                                cartSneaker.items
-                                  .map((item) => item.name)
-                                  .includes(sneaker?.name)
-                                  ? "lightgreen"
-                                  : "white"
-                              }
+                              color={"white"}
                               solid
                               name="shopping-bag"
                               size={20}
@@ -419,20 +414,12 @@ export const ModalSneaker = ({ modalVisible, closeBottomSheet }) => {
                             />
                             <Text
                               style={{
-                                color: cartSneaker.items
-                                  .map((item) => item.name)
-                                  .includes(sneaker?.name)
-                                  ? "lightgreen"
-                                  : "white",
+                                color: "white",
                                 fontWeight: "bold",
                                 fontSize: 15,
                               }}
                             >
-                              {cartSneaker.items
-                                .map((item) => item.size)
-                                .includes(sneaker?.name)
-                                ? "In cart"
-                                : "Add to cart"}
+                              Добавить
                             </Text>
                           </View>
                         </TouchableHighlight>

@@ -1,9 +1,10 @@
 import { ScrollView, StyleSheet, View } from "react-native";
 import React, { useEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { selectFavoriteProducts } from "../../hooks/useSelector";
 import Sneaker from "../../componetns/Sneaker.component";
+import { addToFavorites } from "../../redux/favourite/favourite.slice";
 
 export default function Category({ route }) {
   const { brand } = React.useMemo(() => {
@@ -12,6 +13,7 @@ export default function Category({ route }) {
   const navigation = useNavigation();
 
   const favorites = useSelector(selectFavoriteProducts);
+  const dispatch = useDispatch()
 
   useEffect(() => {
     navigation.setOptions({ title: brand.name });
@@ -44,7 +46,9 @@ export default function Category({ route }) {
               sneakerSoldCount={item.soldCount}
               sneakerRating={item.rating}
               sneakerParams={item}
-              favoriteSneaker={item}
+              favoriteSneaker={() => {
+                dispatch(addToFavorites(item));
+              }}
               favoriteSneakerColor={
                 favorites.items.map((item) => item.id).includes(item.id)
                   ? "red"

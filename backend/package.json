@@ -26,6 +26,8 @@
 		"@nestjs/platform-express": "^10.0.0",
 		"@prisma/client": "^5.6.0",
 		"@railway/cli": "^3.5.1",
+		"@types/bwip-js": "^3.2.3",
+		"bwip-js": "^4.1.2",
 		"class-transformer": "^0.5.1",
 		"class-validator": "^0.14.0",
 		"global": "^4.4.0",

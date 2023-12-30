@@ -54,10 +54,10 @@ export default function Scrollbar() {
   };
 
   React.useEffect(() => {
-   if (data) {
-    refetch()
-   } 
-  }, [data])
+    if (data) {
+      refetch();
+    }
+  }, [data]);
 
   return (
     <View style={styles.container}>
@@ -223,7 +223,7 @@ export default function Scrollbar() {
                     </View>
                   );
 
-                if (focus === "All")
+                if (focus === "Все")
                   return (
                     <View key={item.id} style={{ ...styles.container_item }}>
                       {item.sneaker.map((sneaker, idx) => {

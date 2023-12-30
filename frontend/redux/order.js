@@ -17,14 +17,14 @@ export const order = createApi({
             query: ({
                 userId,
                 sneakerId,
-                address
+                address,
             }) => ({
                 url: "/order/create",
                 method: "POST",
                 body: {
                     userId,
                     sneakerId,
-                    address
+                    address,
                 }
             })
         }),

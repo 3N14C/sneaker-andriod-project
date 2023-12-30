@@ -80,9 +80,7 @@ const Sneaker = ({
               }}
               name="heart"
               size={15}
-              onPress={() => {
-                dispatch(addToFavorites(favoriteSneaker));
-              }}
+              onPress={favoriteSneaker}
             />
             <Image
               style={{

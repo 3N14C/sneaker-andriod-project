@@ -3,9 +3,7 @@ import {
   StatusBar,
   StyleSheet,
   Text,
-  TextInput,
   TouchableHighlight,
-  TouchableOpacity,
   View,
 } from "react-native";
 import React from "react";
@@ -16,14 +14,14 @@ import Popular from "./components/Popular/Popular";
 import HomeAdmin from "../../admin/screens/home/HomeAdmin";
 import Search from "../../componetns/Search.component";
 import { sneaker } from "../../redux/sneaker";
-import { brand } from "../../redux/brand";
 
 export default function Home({ route, navigation }) {
   const { data } = route?.params;
-  const {data: sneakerData = []} = sneaker.useGetAllQuery()
+  const { data: sneakerData = [] } = sneaker.useGetAllQuery();
+  const [search, setSearch] = React.useState("");
 
   return (
-    <ScrollView style={{ flex: 1 }}>
+    <ScrollView style={{ flex: 1, backgroundColor: '#fff' }}>
       <View style={styles.container}>
         {data.role !== "ADMIN" ? (
           <>
@@ -33,33 +31,41 @@ export default function Home({ route, navigation }) {
               role={data.role}
             />
 
-            <Search getSneakerData={sneakerData} />
+            <Search
+              search={search}
+              setSearch={setSearch}
+              getSneakerData={sneakerData}
+            />
 
-            <View style={styles.offer}>
-              <Text style={styles.title}>Специальные предложения</Text>
+            {search.length === 0 && (
+              <>
+                <View style={styles.offer}>
+                  <Text style={styles.title}>Специальные предложения</Text>
 
-              <TouchableHighlight
-                underlayColor={"transparent"}
-                onPress={() => navigation.navigate("Special Offers")}
-              >
-                <Text
-                  style={{
-                    ...styles.title,
-                    fontSize: 15,
-                    maxWidth: "100%",
-                    padding: 20,
-                  }}
-                >
-                  Посмотреть все
-                </Text>
-              </TouchableHighlight>
-            </View>
+                  <TouchableHighlight
+                    underlayColor={"transparent"}
+                    onPress={() => navigation.navigate("Special Offers")}
+                  >
+                    <Text
+                      style={{
+                        ...styles.title,
+                        fontSize: 15,
+                        maxWidth: "100%",
+                        padding: 20,
+                      }}
+                    >
+                      Посмотреть все
+                    </Text>
+                  </TouchableHighlight>
+                </View>
 
-            <Offer />
+                <Offer />
 
-            <Brand />
+                <Brand />
 
-            <Popular />
+                <Popular />
+              </>
+            )}
             <StatusBar />
           </>
         ) : (
@@ -119,6 +125,4 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
   },
-
-  
 });

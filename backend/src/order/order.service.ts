@@ -1,8 +1,8 @@
 import { SneakersService } from './../sneakers/sneakers.service'
-import JsBarcode from 'jsbarcode'
 import { Injectable } from '@nestjs/common'
 import { PrismaService } from 'src/prisma.service'
 import { OrderDto } from './dto/order.dto'
+import {v4 as uuidv4} from 'uuid'
 
 @Injectable()
 export class OrderService {
@@ -12,6 +12,9 @@ export class OrderService {
 	) {}
 
 	async create(dto: OrderDto) {
+
+		const barcode = uuidv4()
+
 		const order = await this.prisma.order.create({
 			data: {
 				...dto,
@@ -21,7 +24,8 @@ export class OrderService {
 						address: 'Иркутск, ул. Ленина, 1',
 						date: new Date().toISOString()
 					}
-				]
+				],
+				barcode: barcode
 			},
 
 			include: {

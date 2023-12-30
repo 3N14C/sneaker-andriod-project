@@ -11,8 +11,11 @@ import { order } from "../../redux/order";
 import { useFocusEffect, useRoute } from "@react-navigation/native";
 import Layout from "./components/Layout";
 import useCurrentPrice from "../../hooks/useCurrentPrice";
+import Review from "../../componetns/Review.modal";
 
 export default function Order({ navigation }) {
+  const [openModal, setOpenModal] = React.useState(false)
+
   const route = useRoute();
   const userData = route.params?.data || {};
   const { data: orderData = [], refetch } = order.useGetOrdersByUserQuery(
@@ -31,6 +34,16 @@ export default function Order({ navigation }) {
       refetch();
     }
   }, [orderData]);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      refetch();
+    })
+  )
+
+  const handleOpenModal = () => {
+    setOpenModal(true)
+  }
 
   return (
     <Layout
@@ -205,6 +218,10 @@ export default function Order({ navigation }) {
       }
       completedOrders={
         <>
+          <Review
+            openModal={openModal}
+            closeModal={() => setOpenModal(false)}
+          />
           <ScrollView showsVerticalScrollIndicator={false}>
             <View
               style={{
@@ -271,7 +288,7 @@ export default function Order({ navigation }) {
                                     marginTop: -10,
                                   }}
                                 >
-                                  В пути
+                                  Доставлено
                                 </Text>
                               </View>
 
@@ -308,18 +325,19 @@ export default function Order({ navigation }) {
 
                                 <TouchableOpacity
                                   onPress={() => {
-                                    navigation.navigate("TrackOrder", {
+                                    navigation.setParams({
                                       orderItem: order.sneaker,
-                                      order: order,
-                                    });
+                                    })
+                                    handleOpenModal();
                                   }}
                                 >
                                   <Text
                                     style={{
                                       ...styles.button,
+                                      paddingHorizontal: 30,
                                     }}
                                   >
-                                    Отслеживать
+                                    Отзыв
                                   </Text>
                                 </TouchableOpacity>
                               </View>

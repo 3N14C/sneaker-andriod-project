@@ -15,9 +15,13 @@ import { Toast } from "react-native-toast-notifications";
 import { useFocusEffect } from "@react-navigation/native";
 import { sneaker } from "../../../redux/sneaker";
 import AddSneakerAdmin from "./components/AddSneakerAdmin";
+import Icon from 'react-native-vector-icons/FontAwesome5'
+import useCurrentPrice from "../../../hooks/useCurrentPrice";
+import SneakerSkeleton from "../../../skeleton/SneakerSkeleton";
+import { ModalSneaker } from "../../../screens/home/components/BottomModal/ModalSneaker";
 
 export default function SneakersAdmin() {
-  const [focus, setFocus] = React.useState(null || "All");
+  const [focus, setFocus] = React.useState(null || "Все");
   const [modalVisible, setModalVisible] = React.useState(false);
 
   const {
@@ -26,11 +30,13 @@ export default function SneakersAdmin() {
     refetch,
   } = brand.useGetAllQuery();
 
+  const currentPrice = useCurrentPrice()
+
   const [createSneaker] = sneaker.useCreateSneakerMutation();
   const [removeSneaker] = sneaker.useRemoveSneakerMutation();
 
   useFocusEffect(() => {
-    refetch();
+    refetch()
   });
 
   const onFocus = (idx) => {
@@ -41,16 +47,15 @@ export default function SneakersAdmin() {
     }
   };
 
-  const uniqueData = brandSneaker.map((brand) => {
-    return brand?.sneaker.reduce((acc, obj) => {
-      const found = acc.find((item) => item.name === obj.name);
-      if (!found) {
-        acc.push(obj);
-      }
-      return acc;
-    }, []);
-  });
-
+  // const uniqueData = brandSneaker.map((brand) => {
+  //   return brand?.sneaker.reduce((acc, obj) => {
+  //     const found = acc.find((item) => item.name === obj.name);
+  //     if (!found) {
+  //       acc.push(obj);
+  //     }
+  //     return acc;
+  //   }, []);
+  // });
   
 
   const handleRemoveSneaker = (id) => {
@@ -74,6 +79,7 @@ export default function SneakersAdmin() {
         openModal={modalVisible}
         closeModal={() => setModalVisible(false)}
       />
+
       <TouchableHighlight
         underlayColor={"#000"}
         onPress={() => setModalVisible(true)}
@@ -88,20 +94,24 @@ export default function SneakersAdmin() {
       >
         <Text style={{ color: "white" }}>Добавить кроссовок</Text>
       </TouchableHighlight>
-      <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
+      <ScrollView
+        style={{ marginTop: 20, marginBottom: 20 }}
+        horizontal={true}
+        showsHorizontalScrollIndicator={false}
+      >
         <View style={styles.scrollbar}>
           <Text
-            onPress={() => setFocus("All")}
+            onPress={() => setFocus("Все")}
             style={{
-              color: focus === "All" ? "white" : "black",
-              backgroundColor: focus === "All" ? "black" : "white",
+              color: focus === "Все" ? "white" : "black",
+              backgroundColor: focus === "Все" ? "black" : "white",
               ...styles.scrollbar_item,
               marginRight: 15,
               textAlign: "center",
               alignItems: "center",
             }}
           >
-            All
+            Все
           </Text>
           {brandSneaker.map((item, idx) => (
             <TouchableHighlight
@@ -127,382 +137,201 @@ export default function SneakersAdmin() {
         </View>
       </ScrollView>
 
-      <View style={styles.container}>
-        <View>
-          {brandSneaker.map((item, idx) => {
-            if (focus === idx)
-              return (
-                <View key={item.id} style={{ ...styles.container_item }}>
-                  {item.sneaker.map((sneaker, idx) => {
-                    if (sneaker.soldCount > 6000 && sneaker.rating > "4.0")
-                      return (
-                        <View key={sneaker.id}>
-                          <TouchableOpacity
-                            key={sneaker.id}
-                            onPress={() => {
-                              navigation.setParams({
-                                sneaker: sneaker,
-                              });
-                              openBottomSheet();
-                            }}
-                          >
-                            <View
-                              style={{
-                                marginBottom: 30,
-                              }}
-                            >
-                              <View style={styles.container_sneaker}>
-                                <Icon
-                                  solid
-                                  style={{
-                                    color: favorites.items
-                                      .map((sneaker) => sneaker.name)
-                                      .includes(sneaker.name)
-                                      ? "red"
-                                      : "black",
-                                    paddingHorizontal: 2,
-                                    paddingVertical: 10,
-                                    width: 40,
-                                    borderRadius: 50,
-                                    textAlign: "center",
-                                    position: "absolute",
-                                    right: 10,
-                                    zIndex: 20,
-                                  }}
-                                  name="heart"
-                                  size={15}
-                                  onPress={() => {
-                                    handleAddToFavorites(sneaker);
-                                  }}
-                                />
-                                <Image
-                                  style={{
-                                    width: 100,
-                                    height: 100,
-                                    zIndex: 10,
-                                  }}
-                                  source={{ uri: sneaker.image }}
-                                />
-                              </View>
-                              <Text style={{ ...styles.sneakerName }}>
-                                {sneaker.name.length >= 20
-                                  ? `${sneaker.name.slice(0, 20)}...`
-                                  : sneaker.name}
-                              </Text>
-                              <View
-                                style={{
-                                  flexDirection: "row",
-                                  alignItems: "center",
-                                  marginTop: 10,
-                                }}
-                              >
-                                <Icon
-                                  style={{ color: "#101010" }}
-                                  solid
-                                  name="star"
-                                  size={14}
-                                />
-                                <Text style={{ ...styles.rating }}>
-                                  {sneaker.rating} |{" "}
-                                </Text>
-                                <Text style={{ ...styles.soldCount }}>
-                                  {sneaker.soldCount} продано
-                                </Text>
-                              </View>
-                              <Text style={{ ...styles.sneakerPrice }}>
-                                {sneaker.offerPrice
-                                  ? parseFloat(
-                                      (+sneaker.price *
-                                        currentPrice *
-                                        +sneaker.offerPrice) /
-                                        100
-                                    ).toLocaleString("ru-RU", {
-                                      style: "currency",
-                                      currency: "RUB",
-                                    })
-                                  : parseFloat(
-                                      +sneaker.price * currentPrice
-                                    ).toLocaleString("ru-RU", {
-                                      style: "currency",
-                                      currency: "RUB",
-                                    })}
-                              </Text>
-                            </View>
-                          </TouchableOpacity>
-                        </View>
-                      );
-                  })}
-                </View>
-              );
+      <ScrollView showsVerticalScrollIndicator={false}>
+        <View >
+          {/* <ModalSneaker
+            modalVisible={ modalVisible }
+            closeBottomSheet={ () => setModalVisible(false) }
+          /> */}
 
-            if (focus === "All")
-              return (
-                <View key={item.id} style={{ ...styles.container_item }}>
-                  {item.sneaker.map((sneaker, idx) => {
-                    if (sneaker.soldCount > 6000 && sneaker.rating > "4.0")
-                      return (
-                        <View key={sneaker.id}>
-                          <TouchableOpacity
-                            key={sneaker.id}
-                            onPress={() => {
-                              navigation.setParams({
-                                sneaker: sneaker,
-                              });
-                              openBottomSheet();
-                            }}
-                          >
-                            <View
-                              style={{
-                                marginBottom: 30,
+          {isLoading ? (
+            <View style={{ ...styles.container_item }}>
+              <SneakerSkeleton />
+              <SneakerSkeleton />
+              <SneakerSkeleton />
+              <SneakerSkeleton />
+              <SneakerSkeleton />
+            </View>
+          ) : (
+            <>
+              {brandSneaker.map((item, idx) => {
+                if (focus === idx)
+                  return (
+                    <View key={item.id} style={{ ...styles.container_item }}>
+                      {item.sneaker.map((sneaker, idx) => {
+                        return (
+                          <View key={sneaker.id}>
+                            <TouchableOpacity
+                              key={sneaker.id}
+                              onPress={() => {
+                                navigation.setParams({
+                                  sneaker: sneaker,
+                                });
+                                openBottomSheet();
                               }}
                             >
-                              <View style={styles.container_sneaker}>
-                                <Icon
-                                  solid
-                                  style={{
-                                    color: favorites.items
-                                      .map((sneaker) => sneaker.name)
-                                      .includes(sneaker.name)
-                                      ? "red"
-                                      : "black",
-                                    paddingHorizontal: 2,
-                                    paddingVertical: 10,
-                                    width: 40,
-                                    borderRadius: 50,
-                                    textAlign: "center",
-                                    position: "absolute",
-                                    right: 10,
-                                  }}
-                                  name="heart"
-                                  size={15}
-                                  onPress={() => {
-                                    handleAddToFavorites(sneaker);
-                                  }}
-                                />
-                                <Image
-                                  style={{ width: 100, height: 100 }}
-                                  source={{ uri: sneaker.image }}
-                                />
-                              </View>
-                              <Text style={styles.sneakerName}>
-                                {sneaker.name.length >= 20
-                                  ? `${sneaker.name.slice(0, 20)}...`
-                                  : sneaker.name}
-                              </Text>
                               <View
                                 style={{
-                                  flexDirection: "row",
-                                  alignItems: "center",
-                                  marginTop: 10,
+                                  marginBottom: 30,
                                 }}
                               >
-                                <Icon
-                                  style={{ color: "#101010" }}
-                                  solid
-                                  name="star"
-                                  size={14}
-                                />
-                                <Text style={{ ...styles.rating }}>
-                                  {sneaker.rating} |{" "}
+                                <View style={styles.container_sneaker}>
+                                  <Image
+                                    style={{
+                                      width: 100,
+                                      height: 100,
+                                      zIndex: 10,
+                                    }}
+                                    source={{ uri: sneaker.image[0].path }}
+                                  />
+                                </View>
+                                <Text style={{ ...styles.sneakerName }}>
+                                  {sneaker.name.length >= 20
+                                    ? `${sneaker.name.slice(0, 20)}...`
+                                    : sneaker.name}
                                 </Text>
-                                <Text style={{ ...styles.soldCount }}>
-                                  {sneaker.soldCount} продано
+                                <View
+                                  style={{
+                                    flexDirection: "row",
+                                    alignItems: "center",
+                                    marginTop: 10,
+                                  }}
+                                >
+                                  <Icon
+                                    style={{ color: "#101010" }}
+                                    solid
+                                    name="star"
+                                    size={14}
+                                  />
+                                  <Text style={{ ...styles.rating }}>
+                                    {sneaker.rating} |{" "}
+                                  </Text>
+                                  <Text style={{ ...styles.soldCount }}>
+                                    {sneaker.soldCount} продано
+                                  </Text>
+                                </View>
+                                <Text style={{ ...styles.sneakerPrice }}>
+                                  {sneaker.offerPrice
+                                    ? parseFloat(
+                                        (+sneaker.price *
+                                          currentPrice *
+                                          +sneaker.offerPrice) /
+                                          100
+                                      ).toLocaleString("ru-RU", {
+                                        style: "currency",
+                                        currency: "RUB",
+                                      })
+                                    : parseFloat(
+                                        +sneaker.price * currentPrice
+                                      ).toLocaleString("ru-RU", {
+                                        style: "currency",
+                                        currency: "RUB",
+                                      })}
                                 </Text>
                               </View>
-                              <Text style={{ ...styles.sneakerPrice }}>
-                                {sneaker.offerPrice
-                                  ? parseFloat(
-                                      (+sneaker.price *
-                                        currentPrice *
-                                        +sneaker.offerPrice) /
-                                        100
-                                    ).toLocaleString("ru-RU", {
-                                      style: "currency",
-                                      currency: "RUB",
-                                    })
-                                  : parseFloat(
-                                      +sneaker.price * currentPrice
-                                    ).toLocaleString("ru-RU", {
-                                      style: "currency",
-                                      currency: "RUB",
-                                    })}
-                              </Text>
-                            </View>
-                          </TouchableOpacity>
-                        </View>
-                      );
-                  })}
-                </View>
-              );
-          })}
+                            </TouchableOpacity>
+                          </View>
+                        );
+                      })}
+                    </View>
+                  );
+
+                if (focus === "Все")
+                  return (
+                    <View key={item.id} style={{ ...styles.container_item }}>
+                      {item?.sneaker.map((sneaker, idx) => {
+                        return (
+                          <View key={sneaker.id}>
+                            <TouchableOpacity
+                              key={sneaker.id}
+                              onPress={() => {
+                                navigation.setParams({
+                                  sneaker: sneaker,
+                                });
+                                openBottomSheet();
+                              }}
+                            >
+                              <View
+                                style={{
+                                  marginBottom: 30,
+                                }}
+                              >
+                                <View style={styles.container_sneaker}>
+                                  <Image
+                                    style={{ width: 100, height: 100 }}
+                                    source={{ uri: sneaker.image[0].path }}
+                                  />
+                                </View>
+                                <Text style={styles.sneakerName}>
+                                  {sneaker.name.length >= 20
+                                    ? `${sneaker.name.slice(0, 20)}...`
+                                    : sneaker.name}
+                                </Text>
+                                <View
+                                  style={{
+                                    flexDirection: "row",
+                                    alignItems: "center",
+                                    marginTop: 10,
+                                  }}
+                                >
+                                  <Icon
+                                    style={{ color: "#101010" }}
+                                    solid
+                                    name="star"
+                                    size={14}
+                                  />
+                                  <Text style={{ ...styles.rating }}>
+                                    {sneaker.rating} |{" "}
+                                  </Text>
+                                  <Text style={{ ...styles.soldCount }}>
+                                    {sneaker.soldCount} продано
+                                  </Text>
+                                </View>
+                                <Text style={{ ...styles.sneakerPrice }}>
+                                  {sneaker.offerPrice
+                                    ? parseFloat(
+                                        (+sneaker.price *
+                                          currentPrice *
+                                          +sneaker.offerPrice) /
+                                          100
+                                      ).toLocaleString("ru-RU", {
+                                        style: "currency",
+                                        currency: "RUB",
+                                      })
+                                    : parseFloat(
+                                        +sneaker.price * currentPrice
+                                      ).toLocaleString("ru-RU", {
+                                        style: "currency",
+                                        currency: "RUB",
+                                      })}
+                                </Text>
+                              </View>
+                            </TouchableOpacity>
+                          </View>
+                        );
+                      })}
+                    </View>
+                  );
+              })}
+            </>
+          )}
         </View>
-      </View>
+      </ScrollView>
     </View>
-    // <ScrollView>
-    //   <View
-    //     style={{
-    //       ...styles.container,
-    //     }}
-    //   >
-    //     <>
-    //       <View
-    //         style={{
-    //           gap: 20,
-    //         }}
-    //       >
-    //         <Text
-    //           style={{
-    //             fontSize: 20,
-    //             fontWeight: "bold",
-    //           }}
-    //         >
-    //           Добавить Кроссовок
-    //         </Text>
-
-    //         <TextInput
-    //           value={name}
-    //           onChangeText={setName}
-    //           placeholder="Название Кроссовок"
-    //           style={{
-    //             width: 200,
-    //             height: 40,
-    //             borderColor: "gray",
-    //             borderWidth: 1,
-    //           }}
-    //         />
-
-    //         <TextInput
-    //           value={brandName}
-    //           onChangeText={setBrandName}
-    //           placeholder="Название Бренда"
-    //           style={{
-    //             width: 200,
-    //             height: 40,
-    //             borderColor: "gray",
-    //             borderWidth: 1,
-    //           }}
-    //         />
-
-    //         <TextInput
-    //           value={price}
-    //           onChangeText={setPrice}
-    //           placeholder="Цена"
-    //           style={{
-    //             width: 200,
-    //             height: 40,
-    //             borderColor: "gray",
-    //             borderWidth: 1,
-    //           }}
-    //         />
-
-    //         <TextInput
-    //           value={sizeNumber}
-    //           onChangeText={setSizeNumber}
-    //           placeholder="Размер"
-    //           style={{
-    //             width: 200,
-    //             height: 40,
-    //             borderColor: "gray",
-    //             borderWidth: 1,
-    //           }}
-    //         />
-
-    //         {showOffer ? (
-    //           <TouchableOpacity
-    //             onPress={hadleShowOffer}
-    //             style={{
-    //               width: 200,
-    //               height: 40,
-    //               backgroundColor: "blue",
-    //               alignItems: "center",
-    //               justifyContent: "center",
-    //             }}
-    //           >
-    //             <Text style={{ color: "white" }}>Добавить скидку</Text>
-    //           </TouchableOpacity>
-    //         ) : (
-    //           <View style={{ flexDirection: "row", alignItems: "center" }}>
-    //             <TextInput
-    //               value={offerPrice}
-    //               onChangeText={setOfferPrice}
-    //               placeholder="Скидка"
-    //               style={{
-    //                 width: 200,
-    //                 height: 40,
-    //                 borderColor: "gray",
-    //                 borderWidth: 1,
-    //               }}
-    //             />
-    //             <Text
-    //               onPress={() => {
-    //                 hadleShowOffer();
-    //                 !showOffer && setOfferPrice('')
-    //               }}
-    //               style={{ marginLeft: 10, color: "red", fontSize: 20 }}
-    //             >
-    //               X
-    //             </Text>
-    //           </View>
-    //         )}
-
-    //         <Button title="Выбрать изображение" onPress={handleImageUpload} />
-
-    //         <View>
-    //           {image && (
-    //             <Image
-    //               source={{ uri: image }}
-    //               style={{ width: 200, height: 200 }}
-    //             />
-    //           )}
-    //         </View>
-
-    //         <Button title="Submit" onPress={handleCreateSneaker} />
-    //       </View>
-    //     </>
-
-    //     <View>
-    //       {uniqueData.map((brandSneaker) =>
-    //         brandSneaker.map((sneaker) => (
-    //           <View
-    //             key={sneaker.id}
-    //             style={{
-    //               flexDirection: "row",
-    //               alignItems: "center",
-    //               paddingBottom: 20,
-    //               paddingTop: 20,
-    //               paddingLeft: 20,
-    //               paddingRight: 20,
-    //             }}
-    //           >
-    //             <Text>{sneaker.name}</Text>
-    //             <Image
-    //               source={{ uri: sneaker.image }}
-    //               style={{ width: 100, height: 100 }}
-    //             />
-    //             <Text
-    //               onPress={() => handleRemoveSneaker(sneaker.id)}
-    //               style={{
-    //                 marginLeft: 20,
-    //                 color: "red",
-    //                 fontSize: 20,
-    //               }}
-    //             >
-    //               X
-    //             </Text>
-    //           </View>
-    //         ))
-    //       )}
-    //     </View>
-    //   </View>
-    // </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
+  containerList: { 
+    marginTop: 140
+  },
+
   container: {
-    marginTop: 20,
+    paddingTop: 20,
     flex: 1,
     alignItems: "center",
+    paddingHorizontal: 20,
+    backgroundColor: '#fff'
   },
 
   sneakerName: {
@@ -512,6 +341,7 @@ const styles = StyleSheet.create({
   },
 
   scrollbar: {
+    flex: 1,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",

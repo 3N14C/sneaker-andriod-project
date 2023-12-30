@@ -1,5 +1,7 @@
 import {
+  Animated,
   BackHandler,
+  Easing,
   Image,
   Keyboard,
   StyleSheet,
@@ -12,13 +14,43 @@ import React from "react";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import { ModalSneaker } from "../screens/home/components/BottomModal/ModalSneaker";
 import { useNavigation } from "@react-navigation/native";
+import Sneaker from "./Sneaker.component";
+import { useDispatch, useSelector } from "react-redux";
+import { selectFavoriteProducts } from "../hooks/useSelector";
+import { addToFavorites } from "../redux/favourite/favourite.slice";
 
-const Search = ({ getSneakerData }) => {
-  const [search, setSearch] = React.useState("");
+const Search = ({ getSneakerData, search, setSearch }) => {
+  const searchRef = React.useRef();
   const [visible, setVisible] = React.useState(false);
   const [modalVisible, setModalVisible] = React.useState(false);
+  const [animation] = React.useState(new Animated.Value(0));
 
-  const navigation = useNavigation();
+  const dispatch = useDispatch();
+  const favorite = useSelector(selectFavoriteProducts);
+
+  const showResults = () => {
+    Animated.timing(animation, {
+      toValue: 1,
+      duration: 300, // adjust the duration as needed
+      useNativeDriver: true, // enable native driver for better performance
+    }).start();
+  };
+
+  const hideResults = () => {
+    Animated.timing(animation, {
+      toValue: 0,
+      duration: 300, // adjust the duration as needed
+      useNativeDriver: true, // enable native driver for better performance
+    }).start();
+  };
+
+  React.useEffect(() => {
+    if (search.length > 0) {
+      showResults();
+    } else if (search.length === 0) {
+      hideResults();
+    }
+  }, [search.length]);
 
   const openBottomSheet = () => {
     setModalVisible(true);
@@ -41,11 +73,19 @@ const Search = ({ getSneakerData }) => {
       }
     );
 
+    const keyboardDidHideListener = Keyboard.addListener(
+      "keyboardDidHide",
+      () => {
+        searchRef.current.blur();
+      }
+    );
+
     BackHandler.addEventListener("hardwareBackPress", handleBackButton);
 
     return () => {
       BackHandler.removeEventListener("hardwareBackPress", handleBackButton);
       keyboardDidShowListener.remove();
+      keyboardDidHideListener.remove();
     };
   }, []);
 
@@ -61,11 +101,15 @@ const Search = ({ getSneakerData }) => {
           alignItems: "center",
           marginTop: 20,
           gap: 10,
+          backgroundColor: "#f4f4f4",
+          borderRadius: 50,
+          width: 340
         }}
       >
         <View style={styles.search}>
           <Icon name="search" size={20} color={"#cccbca"} />
           <TextInput
+            ref={searchRef}
             onChangeText={setSearch}
             style={{ minWidth: 250 }}
             placeholder="Поиск"
@@ -77,50 +121,116 @@ const Search = ({ getSneakerData }) => {
         </TouchableOpacity>
       </View>
 
-      {visible && (
-        <>
-          {search !== "" && (
-            <>
-              {getSneakerData
-                .filter((sneaker) =>
-                  sneaker.name?.toLowerCase().includes(search.toLowerCase())
-                )
-                .reduce((acc, obj) => {
-                  const found = acc.find((item) => item.name === obj.name);
-                  if (!found) {
-                    acc.push(obj);
-                  }
-                  return acc;
-                }, [])
-                .map((sneaker) => (
-                  <TouchableOpacity
-                    key={sneaker.id}
-                    onPress={() => {
-                      navigation.setParams({
-                        sneaker: sneaker,
-                      });
-                      openBottomSheet();
-                    }}
-                  >
-                    <View style={{ ...styles.sneakerContainer }}>
-                      <Image
-                        style={{ width: 50, height: 50 }}
-                        src={sneaker.image[0].path}
+      <Animated.View
+        pointerEvents={visible ? "auto" : "none"}
+        style={{
+          opacity: animation,
+          transform: [
+            {
+              translateY: animation.interpolate({
+                inputRange: [-2, 1],
+                outputRange: [-100, 0],
+              }),
+            },
+          ],
+        }}
+      >
+        {visible && (
+          <>
+            {search !== "" && (
+              <View
+                style={{
+                  marginTop: 10,
+                  flexDirection: "row",
+                  flexWrap: "wrap",
+                  justifyContent: "space-between",
+                }}
+              >
+                {getSneakerData
+                  .filter((sneaker) =>
+                    sneaker.name?.toLowerCase().includes(search.toLowerCase())
+                  )
+                  .reduce((acc, obj) => {
+                    const found = acc.find((item) => item.name === obj.name);
+                    if (!found) {
+                      acc.push(obj);
+                    }
+                    return acc;
+                  }, [])
+                  .map((sneaker) => (
+                    <View
+                      key={sneaker.id}
+                      style={{
+                        maxWidth: 150,
+                      }}
+                    >
+                      <Sneaker
+                        imageSneaker={sneaker.image[0].path}
+                        createdAt={sneaker.createdAt}
+                        sneakerName={sneaker.name}
+                        sneakerParams={sneaker}
+                        sneakerPrice={sneaker.price}
+                        sneakerOfferPrice={sneaker.offerPrice}
+                        sneakerRating={sneaker.rating}
+                        sneakerSoldCount={sneaker.soldCount}
+                        favoriteSneaker={() =>
+                          dispatch(addToFavorites(sneaker))
+                        }
+                        favoriteSneakerColor={
+                          favorite.items
+                            .map((item) => item.id)
+                            .includes(sneaker.id)
+                            ? "red"
+                            : "black"
+                        }
                       />
-
-                      <View>
-                        <Text>{sneaker.name}</Text>
-                      </View>
                     </View>
-                  </TouchableOpacity>
-                ))}
-            </>
-          )}
-          {getSneakerData.filter((sneaker) =>
-            sneaker.name?.toLowerCase().includes(search.toLowerCase())
-          ).length === 0 && <Text>Ничего не найдено</Text>}
-        </>
-      )}
+                  ))}
+              </View>
+            )}
+            {getSneakerData.filter((sneaker) =>
+              sneaker.name?.toLowerCase().includes(search.toLowerCase())
+            ).length === 0 && (
+              <View
+                style={{
+                  marginTop: 20,
+                  alignItems: "center",
+                }}
+              >
+                <Image
+                  style={{ width: "100%", height: 300 }}
+                  source={require("../public/clipboard.png")}
+                />
+
+                <Text
+                  style={{
+                    textAlign: "center",
+                    fontWeight: "bold",
+                    fontSize: 20,
+                    marginTop: 20,
+                    color: "#212121",
+                  }}
+                >
+                  Ничего не найдено
+                </Text>
+
+                <Text
+                  style={{
+                    textAlign: "center",
+                    fontSize: 16,
+                    marginTop: 10,
+                    color: "#484848",
+                    maxWidth: 250,
+                  }}
+                >
+                  Извините, по вашему запросу ничего не найдено. Попробуйте
+                  изменить запрос
+                </Text>
+              </View>
+            )}
+          </>
+        )}
+      </Animated.View>
     </View>
   );
 };

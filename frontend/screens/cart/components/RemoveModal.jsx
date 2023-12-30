@@ -178,7 +178,7 @@ export default function RemoveModal({ modalVisible, closeBottomSheet }) {
                   }}
                   onPress={closeBottomSheet}
                 >
-                  <Text>Cansel</Text>
+                  <Text>Отмена</Text>
                 </TouchableHighlight>
 
                 <TouchableHighlight
@@ -201,7 +201,7 @@ export default function RemoveModal({ modalVisible, closeBottomSheet }) {
                     showToast();
                   }}
                 >
-                  <Text style={{ color: "#fff" }}>Yes, remove</Text>
+                  <Text style={{ color: "#fff" }}>Да, удалить</Text>
                 </TouchableHighlight>
               </View>
             </View>

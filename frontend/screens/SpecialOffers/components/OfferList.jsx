@@ -7,7 +7,6 @@ import Sneaker from "../../../componetns/Sneaker.component";
 
 export default function OfferList({ route }) {
   const { data } = React.useMemo(() => {
-    console.log("useMemo is Called");
     return route?.params;
   }, [route?.params]);
 
