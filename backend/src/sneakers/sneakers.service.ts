@@ -90,7 +90,9 @@ export class SneakersService {
 
 			data: {
 				...dto,
-				image: files ? files : null
+				image: {
+					set: files
+				}
 			}
 		})
 
